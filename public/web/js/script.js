@@ -15,13 +15,3 @@
  	loader();
 
  })(jQuery);
-
- $('#modal-login .btn-register').click(function() {
- 	$('#modal-login').modal('hide');
- 	$('#modal-register').modal();
- });
-
- $('#modal-register .btn-login').click(function() {
- 	$('#modal-register').modal('hide');
- 	$('#modal-login').modal();
- });

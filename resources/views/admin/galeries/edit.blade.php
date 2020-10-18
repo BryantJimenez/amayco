@@ -57,7 +57,7 @@
 
 								<div class="form-group col-12">
 									<label class="col-form-label">Descripción<b class="text-danger">*</b></label>
-									<textarea class="form-control" required name="description" placeholder="Introduce una descripción" rows="5">{{ $galery->description }}</textarea>
+									<textarea class="form-control" required name="description" placeholder="Introduce una descripción" rows="5" id="content-about">{{ $galery->description }}</textarea>
 								</div>
 
 								<div class="form-group col-xl-6 col-lg-6 col-md-6 col-12">

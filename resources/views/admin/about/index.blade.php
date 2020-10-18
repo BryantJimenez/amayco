@@ -13,9 +13,11 @@
 
 @section('content')
 
+@foreach($abouts as $about)
+
 <div class="row layout-top-spacing">
 
-	<div class="col-12 layout-spacing">
+	<div class="col-6 layout-spacing">
 
 		<div class="card component-card_6">
 			<div class="card-body">
@@ -24,7 +26,12 @@
 						<h4 class="card-user_name">¿Quiénes Somos?</h4>
 					</div>
 				</div>
-				<p class="card-text"> Maecenas nec mi vel lacus condimentum rhoncus dignissim egestas orci. Integer blandit porta placerat. Vestibulum in ultricies. </p>
+				<p class="card-text"> {{ $about->description }} </p>
+				<p class="card-text"> {!! lang($about->lang) !!} </p>
+				<div class="btn-group" role="group">
+					<a href="{{ route('about.edit', ['slug' => $about->slug]) }}" class="btn btn-info btn-sm bs-tooltip" title="Editar"><i class="fa fa-edit"></i></a>
+					<button type="button" class="btn btn-danger btn-sm bs-tooltip" title="Eliminar" onclick="deleteAbout('{{ $about->slug }}')"><i class="fa fa-trash"></i></button>
+				</div>
 
 			</div>
 		</div>
@@ -32,6 +39,8 @@
 
 	</div>
 </div>
+
+@endforeach
 
 <div class="modal fade" id="deleteAbout" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog" role="document">
