@@ -9,6 +9,7 @@
 <link href="{{ asset('/admins/vendor/sweetalerts/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('/admins/vendor/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('/admins/css/components/custom-sweetalert.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{{ asset('/admins/vendor/lobibox/Lobibox.min.css') }}">
 @endsection
 
 @section('content')
@@ -20,7 +21,7 @@
 			<div class="widget-header">
 				<div class="row">
 					<div class="col-xl-12 col-md-12 col-sm-12 col-12">
-						<h4>Lista de "Traslados"</h4>
+						<h4>Lista de Traslados</h4>
 					</div>                 
 				</div>
 			</div>
@@ -29,7 +30,7 @@
 				<div class="row">
 					<div class="col-12">
 						<div class="text-right">
-							<a href="{{ route('transfer.create') }}" class="btn btn-primary">Agregar</a>
+							<a href="{{ route('traslados.create') }}" class="btn btn-primary">Agregar</a>
 						</div>
 
 						<div class="table-responsive mb-4 mt-4">
@@ -37,7 +38,7 @@
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>Nombre</th>
+										<th>Título</th>
 										<th>Descripción</th>
 										<th>Idioma</th>
 										<th>Estado</th>
@@ -48,13 +49,18 @@
 									@foreach($transfers  as $transfer)
 									<tr>
 										<td>{{ $num++ }}</td>
-										<td>{{ $transfer->name }}</td>
+										<td>{{ $transfer->title }}</td>
 										<td>{{ $transfer->description }}</td>
-										<td>{!! lang($transfer->lang) !!}</td>
+										<td>{{ $transfer->language->name }}</td>
 										<td>{!! state($transfer->state) !!}</td>
 										<td>
 											<div class="btn-group" role="group">
-												<a href="{{ route('transfer.edit', ['slug' => $transfer->slug]) }}" class="btn btn-info btn-sm bs-tooltip" title="Editar"><i class="fa fa-edit"></i></a>
+												<a href="{{ route('traslados.edit', ['slug' => $transfer->slug]) }}" class="btn btn-info btn-sm bs-tooltip" title="Editar"><i class="fa fa-edit"></i></a>
+												@if($transfer->state==1)
+												<button type="button" class="btn btn-warning btn-sm bs-tooltip" title="Desactivar" onclick="deactiveTransfer('{{ $transfer->slug }}')"><i class="fa fa-power-off"></i></button>
+												@else
+												<button type="button" class="btn btn-success btn-sm bs-tooltip" title="Activar" onclick="activeTransfer('{{ $transfer->slug }}')"><i class="fa fa-check"></i></button>
+												@endif
 												<button type="button" class="btn btn-danger btn-sm bs-tooltip" title="Eliminar" onclick="deleteTransfer('{{ $transfer->slug }}')"><i class="fa fa-trash"></i></button>
 											</div>
 										</td>
@@ -76,7 +82,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">¿Estás seguro de que quieres eliminar este Traslado?</h5>
+				<h5 class="modal-title">¿Estás seguro de que quieres eliminar este traslado?</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -97,7 +103,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">¿Estás seguro de que quieres desactivar este Traslado?</h5>
+				<h5 class="modal-title">¿Estás seguro de que quieres desactivar este traslado?</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -118,7 +124,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">¿Estás seguro de que quieres activar este Traslado?</h5>
+				<h5 class="modal-title">¿Estás seguro de que quieres activar este traslado?</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -145,4 +151,5 @@
 <script src="{{ asset('/admins/vendor/table/datatable/button-ext/buttons.print.min.js') }}"></script>
 <script src="{{ asset('/admins/vendor/sweetalerts/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('/admins/vendor/sweetalerts/custom-sweetalert.js') }}"></script>
+<script src="{{ asset('/admins/vendor/lobibox/Lobibox.js') }}"></script>
 @endsection

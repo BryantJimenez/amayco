@@ -24,8 +24,8 @@ class AttentionUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-        'attention' => 'required|string|min:2|max:191',
-        'lang' => 'required|string'
+            'attention' => 'nullable|string|min:10|max:16770000',
+            'schedule' => 'nullable|string|min:10|max:16770000'
         ];
     }
 }

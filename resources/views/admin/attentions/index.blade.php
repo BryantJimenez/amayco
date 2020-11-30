@@ -9,6 +9,7 @@
 <link href="{{ asset('/admins/vendor/sweetalerts/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('/admins/vendor/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('/admins/css/components/custom-sweetalert.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{{ asset('/admins/vendor/lobibox/Lobibox.min.css') }}">
 @endsection
 
 @section('content')
@@ -20,7 +21,7 @@
 			<div class="widget-header">
 				<div class="row">
 					<div class="col-xl-12 col-md-12 col-sm-12 col-12">
-						<h4>Lista de "Atención al cliente"</h4>
+						<h4>Lista de Atención al cliente</h4>
 					</div>                 
 				</div>
 			</div>
@@ -28,17 +29,13 @@
 
 				<div class="row">
 					<div class="col-12">
-						<div class="text-right">
-							<a href="{{ route('attention.create') }}" class="btn btn-primary">Agregar</a>
-						</div>
-
 						<div class="table-responsive mb-4 mt-4">
 							<table class="table table-hover table-export">
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>Atención</th>
-										<th>Estado</th>
+										<th>Nombre</th>
+										<th>Idioma</th>
 										<th>Acciones</th>
 									</tr>
 								</thead>
@@ -46,12 +43,11 @@
 									@foreach($attentions  as $attention)
 									<tr>
 										<td>{{ $num++ }}</td>
-										<td>{{ $attention->attention }}</td>
-										<td>{!! state($attention->state) !!}</td>
+										<td>{{ "Atención al cliente en ".$attention->language->name }}</td>
+										<td>{{ $attention->language->name }}</td>
 										<td>
 											<div class="btn-group" role="group">
-												<a href="{{ route('attention.edit', ['slug' => $attention->slug]) }}" class="btn btn-info btn-sm bs-tooltip" title="Editar"><i class="fa fa-edit"></i></a>
-												<button type="button" class="btn btn-danger btn-sm bs-tooltip" title="Eliminar" onclick="deleteAttention('{{ $attention->slug }}')"><i class="fa fa-trash"></i></button>
+												<a href="{{ route('atenciones.edit', ['slug' => $attention->slug]) }}" class="btn btn-info btn-sm bs-tooltip" title="Editar"><i class="fa fa-edit"></i></a>
 											</div>
 										</td>
 									</tr>
@@ -68,69 +64,6 @@
 
 </div>
 
-<div class="modal fade" id="deleteAttention" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">¿Estás seguro de que quieres eliminar esta Atención?</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn" data-dismiss="modal">Cancelar</button>
-				<form action="#" method="POST" id="formDeleteAttention">
-					@csrf
-					@method('DELETE')
-					<button type="submit" class="btn btn-primary">Eliminar</button>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="deactiveAttention" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">¿Estás seguro de que quieres desactivar esta Atención?</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn" data-dismiss="modal">Cancelar</button>
-				<form action="#" method="POST" id="formDeactiveAttention">
-					@csrf
-					@method('PUT')
-					<button type="submit" class="btn btn-primary">Desactivar</button>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="activeAttention" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">¿Estás seguro de que quieres activar esta Atención?</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn" data-dismiss="modal">Cancelar</button>
-				<form action="#" method="POST" id="formActiveAttention">
-					@csrf
-					@method('PUT')
-					<button type="submit" class="btn btn-primary">Activar</button>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
-
 @endsection
 
 @section('scripts')
@@ -141,4 +74,5 @@
 <script src="{{ asset('/admins/vendor/table/datatable/button-ext/buttons.print.min.js') }}"></script>
 <script src="{{ asset('/admins/vendor/sweetalerts/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('/admins/vendor/sweetalerts/custom-sweetalert.js') }}"></script>
+<script src="{{ asset('/admins/vendor/lobibox/Lobibox.js') }}"></script>
 @endsection

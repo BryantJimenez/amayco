@@ -15,24 +15,7 @@
 
 Auth::routes(['register' => false]);
 Route::get('/registro/email', 'AuthController@emailVerify');
-
-Route::group(['middleware' => ['login']], function () {
-	Route::get('/ingresar', 'AuthController@loginForm')->name('ingresar');
-	Route::get('/registro', 'AuthController@registerForm')->name('registro');
-	Route::get('/recuperar', 'AuthController@recoveryForm')->name('recuperar');
-	Route::get('/restaurar/{slug}', 'AuthController@resetForm')->name('restaurar');
-	Route::post('/ingresar', 'AuthController@login')->name('login.custom');
-	Route::post('/registro', 'AuthController@register')->name('register.custom');
-	Route::post('/recuperar', 'AuthController@recovery')->name('recovery.custom');
-	Route::post('/restaurar', 'AuthController@reset')->name('reset.custom');
-});
-
-Route::group(['middleware' => ['session_verify']], function () {
-	Route::post('/salir', 'AuthController@logout')->name('logout.custom');
-
-	/////////////////////////////////////////////// WEB ////////////////////////////////////////////////
-	Route::get('/', 'WebController@index')->name('home');
-});
+Route::post('/excursiones/buscar', 'ExcursionController@search');
 
 Route::group(['middleware' => ['auth', 'admin']], function () {
 	/////////////////////////////////////// ADMIN ///////////////////////////////////////////////////
@@ -54,106 +37,101 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
 	Route::put('/admin/administradores/{slug}/activar', 'AdministratorController@activate')->name('administradores.activate');
 	Route::put('/admin/administradores/{slug}/desactivar', 'AdministratorController@deactivate')->name('administradores.deactivate');
 
-	
+	// Banners
+	Route::get('/admin/banners', 'BannerController@index')->name('banners.index');
+	Route::get('/admin/banners/registrar', 'BannerController@create')->name('banners.create');
+	Route::post('/admin/banners', 'BannerController@store')->name('banners.store');
+	Route::get('/admin/banners/{slug}/editar', 'BannerController@edit')->name('banners.edit');
+	Route::put('/admin/banners/{slug}', 'BannerController@update')->name('banners.update');
+	Route::delete('/admin/banners/{slug}', 'BannerController@destroy')->name('banners.delete');
+	Route::put('/admin/banners/{slug}/activar', 'BannerController@activate')->name('banners.activate');
+	Route::put('/admin/banners/{slug}/desactivar', 'BannerController@deactivate')->name('banners.deactivate');
 
-	// Home-page
-	Route::get('/admin/home-page', 'HomeController@index')->name('home.index');
-	Route::get('/admin/home-page/registrar', 'HomeController@create')->name('home.create');
-	Route::post('/admin/home-page', 'HomeController@store')->name('home.store');
-	Route::get('/admin/home-page/{slug}/editar', 'HomeController@edit')->name('home.edit');
-	Route::put('/admin/home-page/{slug}', 'HomeController@update')->name('home.update');
-	Route::delete('/admin/home-page/{slug}', 'HomeController@destroy')->name('home.delete');
-	Route::put('/admin/home-page/{slug}/activar', 'HomeController@activate')->name('home.activate');
-	Route::put('/admin/home-page/{slug}/desactivar', 'HomeController@deactivate')->name('home.deactivate');
-	
+	// Route::post('/admin/banners/videos', 'BannerController@file')->name('banners.store.videos');
+	// Route::post('/admin/banners/videos/editar', 'BannerController@fileEdit')->name('banners.edit.videos');
+	// Route::post('/admin/banners/videos/eliminar', 'BannerController@fileDestroy')->name('banners.destroy.videos');
 
-	// About Us
-	Route::get('/admin/about', 'AboutUsController@index')->name('about.index');
-	Route::get('/admin/about/registrar', 'AboutUsController@create')->name('about.create');
-	Route::post('/admin/about', 'AboutUsController@store')->name('about.store');
-	Route::get('/admin/about/{slug}/editar', 'AboutUsController@edit')->name('about.edit');
-	Route::put('/admin/about/{slug}', 'AboutUsController@update')->name('about.update');
-	Route::delete('/admin/about/{slug}', 'AboutUsController@destroy')->name('about.delete');
-	Route::put('/admin/about/{slug}/activar', 'AboutUsController@activate')->name('about.activate');
-	Route::put('/admin/about/{slug}/desactivar', 'AboutUsController@deactivate')->name('about.deactivate');
+	// Quienes Somos
+	Route::get('/admin/quienes-somos', 'AboutController@index')->name('nosotros.index');
+	Route::get('/admin/quienes-somos/{slug}/editar', 'AboutController@edit')->name('nosotros.edit');
+	Route::put('/admin/quienes-somos/{slug}', 'AboutController@update')->name('nosotros.update');
 
-	// Excursions
-	Route::get('/admin/excursion', 'ExcursionController@index')->name('excursion.index');
-	Route::get('/admin/excursion/registrar', 'ExcursionController@create')->name('excursion.create');
-	Route::post('/admin/excursion', 'ExcursionController@store')->name('excursion.store');
-	Route::get('/admin/excursion/{slug}/editar', 'ExcursionController@edit')->name('excursion.edit');
-	Route::put('/admin/excursion/{slug}', 'ExcursionController@update')->name('excursion.update');
-	Route::delete('/admin/excursion/{slug}', 'ExcursionController@destroy')->name('excursion.delete');
-	Route::put('/admin/excursion/{slug}/activar', 'ExcursionController@activate')->name('excursion.activate');
-	Route::put('/admin/excursion/{slug}/desactivar', 'ExcursionController@deactivate')->name('excursion.deactivate');
+	// Excurciones
+	Route::get('/admin/excursiones', 'ExcursionController@index')->name('excursiones.index');
+	Route::get('/admin/excursiones/registrar', 'ExcursionController@create')->name('excursiones.create');
+	Route::post('/admin/excursiones', 'ExcursionController@store')->name('excursiones.store');
+	Route::get('/admin/excursiones/{slug}/editar', 'ExcursionController@edit')->name('excursiones.edit');
+	Route::put('/admin/excursiones/{slug}', 'ExcursionController@update')->name('excursiones.update');
+	Route::delete('/admin/excursiones/{slug}', 'ExcursionController@destroy')->name('excursiones.delete');
+	Route::put('/admin/excursiones/{slug}/activar', 'ExcursionController@activate')->name('excursiones.activate');
+	Route::put('/admin/excursiones/{slug}/desactivar', 'ExcursionController@deactivate')->name('excursiones.deactivate');
 
-	//Galery
-	Route::get('/admin/galery', 'GaleryController@index')->name('galery.index');
-	Route::get('/admin/galery/registrar', 'GaleryController@create')->name('galery.create');
-	Route::post('/admin/galery', 'GaleryController@store')->name('galery.store');
-	Route::get('/admin/galery/{slug}/editar', 'GaleryController@edit')->name('galery.edit');
-	Route::put('/admin/galery/{slug}', 'GaleryController@update')->name('galery.update');
-	Route::delete('/admin/galery/{slug}', 'GaleryController@destroy')->name('galery.delete');
-	Route::put('/admin/galery/{slug}/activar', 'GaleryController@activate')->name('galery.activate');
-	Route::put('/admin/galery/{slug}/desactivar', 'GaleryController@deactivate')->name('galery.deactivate');
+	// Galeria
+	Route::get('/admin/galeria', 'GalleryController@index')->name('galeria.index');
+	Route::get('/admin/galeria/registrar', 'GalleryController@create')->name('galeria.create');
+	Route::post('/admin/galeria', 'GalleryController@store')->name('galeria.store');
+	Route::get('/admin/galeria/{slug}/editar', 'GalleryController@edit')->name('galeria.edit');
+	Route::put('/admin/galeria/{slug}', 'GalleryController@update')->name('galeria.update');
+	Route::delete('/admin/galeria/{slug}', 'GalleryController@destroy')->name('galeria.delete');
+	Route::put('/admin/galeria/{slug}/activar', 'GalleryController@activate')->name('galeria.activate');
+	Route::put('/admin/galeria/{slug}/desactivar', 'GalleryController@deactivate')->name('galeria.deactivate');
 
-	//Category
-	Route::get('/admin/category', 'CategoryController@index')->name('category.index');
-	Route::get('/admin/category/registrar', 'CategoryController@create')->name('category.create');
-	Route::post('/admin/category', 'CategoryController@store')->name('category.store');
-	Route::get('/admin/category/{slug}/editar', 'CategoryController@edit')->name('category.edit');
-	Route::put('/admin/category/{slug}', 'CategoryController@update')->name('category.update');
-	Route::delete('/admin/category/{slug}', 'CategoryController@destroy')->name('category.delete');
-	Route::put('/admin/category/{slug}/activar', 'CategoryController@activate')->name('category.activate');
-	Route::put('/admin/category/{slug}/desactivar', 'CategoryController@deactivate')->name('category.deactivate');
+	// Categorias
+	Route::get('/admin/categorias', 'CategoryController@index')->name('categorias.index');
+	Route::get('/admin/categorias/registrar', 'CategoryController@create')->name('categorias.create');
+	Route::post('/admin/categorias', 'CategoryController@store')->name('categorias.store');
+	Route::get('/admin/categorias/{slug}/editar', 'CategoryController@edit')->name('categorias.edit');
+	Route::put('/admin/categorias/{slug}', 'CategoryController@update')->name('categorias.update');
+	Route::delete('/admin/categorias/{slug}', 'CategoryController@destroy')->name('categorias.delete');
+	Route::put('/admin/categorias/{slug}/activar', 'CategoryController@activate')->name('categorias.activate');
+	Route::put('/admin/categorias/{slug}/desactivar', 'CategoryController@deactivate')->name('categorias.deactivate');
 
-	//Activity
-	Route::get('/admin/activity', 'ActivityController@index')->name('activity.index');
-	Route::get('/admin/activity/registrar', 'ActivityController@create')->name('activity.create');
-	Route::post('/admin/activity', 'ActivityController@store')->name('activity.store');
-	Route::get('/admin/activity/{slug}/editar', 'ActivityController@edit')->name('activity.edit');
-	Route::put('/admin/activity/{slug}', 'ActivityController@update')->name('activity.update');
-	Route::delete('/admin/activity/{slug}', 'ActivityController@destroy')->name('activity.delete');
-	Route::put('/admin/activity/{slug}/activar', 'ActivityController@activate')->name('activity.activate');
-	Route::put('/admin/activity/{slug}/desactivar', 'ActivityController@deactivate')->name('activity.deactivate');
+	// Actividades
+	Route::get('/admin/actividades', 'ActivityController@index')->name('actividades.index');
+	Route::get('/admin/actividades/registrar', 'ActivityController@create')->name('actividades.create');
+	Route::post('/admin/actividades', 'ActivityController@store')->name('actividades.store');
+	Route::get('/admin/actividades/{slug}/editar', 'ActivityController@edit')->name('actividades.edit');
+	Route::put('/admin/actividades/{slug}', 'ActivityController@update')->name('actividades.update');
+	Route::delete('/admin/actividades/{slug}', 'ActivityController@destroy')->name('actividades.delete');
+	Route::put('/admin/actividades/{slug}/activar', 'ActivityController@activate')->name('actividades.activate');
+	Route::put('/admin/actividades/{slug}/desactivar', 'ActivityController@deactivate')->name('actividades.deactivate');
 
-	//Transfer
-	Route::get('/admin/transfer', 'TransferController@index')->name('transfer.index');
-	Route::get('/admin/transfer/registrar', 'TransferController@create')->name('transfer.create');
-	Route::post('/admin/transfer', 'TransferController@store')->name('transfer.store');
-	Route::get('/admin/transfer/{slug}/editar', 'TransferController@edit')->name('transfer.edit');
-	Route::put('/admin/transfer/{slug}', 'TransferController@update')->name('transfer.update');
-	Route::delete('/admin/transfer/{slug}', 'TransferController@destroy')->name('transfer.delete');
-	Route::put('/admin/transfer/{slug}/activar', 'TransferController@activate')->name('transfer.activate');
-	Route::put('/admin/transfer/{slug}/desactivar', 'TransferController@deactivate')->name('transfer.deactivate');
+	// Traslados
+	Route::get('/admin/traslados', 'TransferController@index')->name('traslados.index');
+	Route::get('/admin/traslados/registrar', 'TransferController@create')->name('traslados.create');
+	Route::post('/admin/traslados', 'TransferController@store')->name('traslados.store');
+	Route::get('/admin/traslados/{slug}/editar', 'TransferController@edit')->name('traslados.edit');
+	Route::put('/admin/traslados/{slug}', 'TransferController@update')->name('traslados.update');
+	Route::delete('/admin/traslados/{slug}', 'TransferController@destroy')->name('traslados.delete');
+	Route::put('/admin/traslados/{slug}/activar', 'TransferController@activate')->name('traslados.activate');
+	Route::put('/admin/traslados/{slug}/desactivar', 'TransferController@deactivate')->name('traslados.deactivate');
 
-	//Office
-	Route::get('/admin/office', 'OfficeController@index')->name('office.index');
-	Route::get('/admin/office/registrar', 'OfficeController@create')->name('office.create');
-	Route::post('/admin/office', 'OfficeController@store')->name('office.store');
-	Route::get('/admin/office/{slug}/editar', 'OfficeController@edit')->name('office.edit');
-	Route::put('/admin/office/{slug}', 'OfficeController@update')->name('office.update');
-	Route::delete('/admin/office/{slug}', 'OfficeController@destroy')->name('office.delete');
-	Route::put('/admin/office/{slug}/activar', 'OfficeController@activate')->name('office.activate');
-	Route::put('/admin/office/{slug}/desactivar', 'OfficeController@deactivate')->name('office.deactivate');
+	// Atención
+	Route::get('/admin/atenciones', 'AttentionController@index')->name('atenciones.index');
+	Route::get('/admin/atenciones/registrar', 'AttentionController@create')->name('atenciones.create');
+	Route::post('/admin/atenciones', 'AttentionController@store')->name('atenciones.store');
+	Route::get('/admin/atenciones/{slug}/editar', 'AttentionController@edit')->name('atenciones.edit');
+	Route::put('/admin/atenciones/{slug}', 'AttentionController@update')->name('atenciones.update');
+	Route::delete('/admin/atenciones/{slug}', 'AttentionController@destroy')->name('atenciones.delete');
+	Route::put('/admin/atenciones/{slug}/activar', 'AttentionController@activate')->name('atenciones.activate');
+	Route::put('/admin/atenciones/{slug}/desactivar', 'AttentionController@deactivate')->name('atenciones.deactivate');
 
-	//Attention
-	Route::get('/admin/attention', 'AttentionController@index')->name('attention.index');
-	Route::get('/admin/attention/registrar', 'AttentionController@create')->name('attention.create');
-	Route::post('/admin/attention', 'AttentionController@store')->name('attention.store');
-	Route::get('/admin/attention/{slug}/editar', 'AttentionController@edit')->name('attention.edit');
-	Route::put('/admin/attention/{slug}', 'AttentionController@update')->name('attention.update');
-	Route::delete('/admin/attention/{slug}', 'AttentionController@destroy')->name('attention.delete');
-	Route::put('/admin/attention/{slug}/activar', 'AttentionController@activate')->name('attention.activate');
-	Route::put('/admin/attention/{slug}/desactivar', 'AttentionController@deactivate')->name('attention.deactivate');
+	// Imagenes
+	Route::get('/admin/imagenes', 'SettingController@imageEdit')->name('imagenes.edit');
+	Route::put('/admin/imagenes', 'SettingController@imageUpdate')->name('imagenes.update');
 
-	//Reservation
-	Route::get('/admin/reservation', 'ReservationController@index')->name('reservation.index');
-	Route::get('/admin/reservation/registrar', 'ReservationController@create')->name('reservation.create');
-	Route::post('/admin/reservation', 'ReservationController@store')->name('reservation.store');
-	Route::get('/admin/reservation/{slug}/editar', 'ReservationController@edit')->name('reservation.edit');
-	Route::put('/admin/reservation/{slug}', 'ReservationController@update')->name('reservation.update');
-	Route::delete('/admin/reservation/{slug}', 'ReservationController@destroy')->name('reservation.delete');
-	Route::put('/admin/reservation/{slug}/activar', 'ReservationController@activate')->name('reservation.activate');
-	Route::put('/admin/reservation/{slug}/desactivar', 'ReservationController@deactivate')->name('reservation.deactivate');
+	// Contacto
+	Route::get('/admin/contactos', 'SettingController@contactEdit')->name('contactos.edit');
+	Route::put('/admin/contactos', 'SettingController@contactUpdate')->name('contactos.update');
+
+	// Politicas
+	Route::get('/admin/politicas', 'PoliticController@index')->name('politicas.index');
+	Route::get('/admin/politicas/{slug}/editar', 'PoliticController@edit')->name('politicas.edit');
+	Route::put('/admin/politicas/{slug}', 'PoliticController@update')->name('politicas.update');	
+});
+
+Route::group(['middleware' => ['lang']], function () {
+	/////////////////////////////////////////////// WEB ////////////////////////////////////////////////
+	Route::get('/{lang?}', 'WebController@index')->name('home');
+	Route::get('/{lang}/excursiones', 'WebController@excursions')->name('excursions');
 });

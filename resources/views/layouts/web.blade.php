@@ -9,8 +9,6 @@
 
 	{{-- <link rel="icon" href="{{ asset('/auth/images/icons/favicon.ico') }}" type="image/x-icon" /> --}}
 
-	
-	
 	@yield('links')
 
 	<!-- Style CSS -->
@@ -28,15 +26,10 @@
 	@yield('content')
 
 	@include('web.partials.footer')
-
-	@if(!session()->has('user'))
-	@include('web.partials.login')
-	@include('web.partials.register')
-	@endif
 	
 	@include('web.partials.loader')
 
-	<script src="{{ asset('/web/s/jquery-3.4.1.min.js') }}"></script>
+	<script src="{{ asset('/web/js/jquery-3.4.1.min.js') }}"></script>
 	<script src="{{ asset('/web/js/popper.min.js') }}"></script>
 	<script src="{{ asset('/web/js/bootstrap.min.js') }}"></script>
 

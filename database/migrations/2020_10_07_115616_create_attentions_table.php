@@ -16,9 +16,13 @@ class CreateAttentionsTable extends Migration
         Schema::create('attentions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('slug')->unique();
-            $table->string('attention');
-            $table->enum('state', [0, 1])->default(1);
+            $table->text('attention')->nullable();
+            $table->text('schedule')->nullable();
+            $table->bigInteger('language_id')->unsigned();
             $table->timestamps();
+
+            #Relations
+            $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="form-container outer" style="background-color: #7CBED4;">
+<div class="form-container bg-primary outer">
     <div class="form-form">
         <div class="form-form-wrap">
             <div class="form-container">

@@ -1,35 +1,57 @@
-	<nav class="navbar sticky-top navbar-light bg-dark navbar-expand-lg py-3" id="navbar">
-		<div class="container px-0">
-			<a href="javascript:void(0);" class="mr-3"><img src="/web/img/logoprincipal.png" alt="Logo"></a>
-			<button class="navbar-toggler d-block d-lg-none d-xl-none" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
+@if(request()->is("es") || request()->is("en"))
 
-			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav mr-auto">
-					<li class="nav-item d-block d-lg-none">
-						<a class="h6 nav-link text-uppercase font-weight-bold text-white" href="javascript:void(0);">Inicio</a>
-					</li>
-					<li class="nav-item d-block d-lg-none">
-						<a class="h6 nav-link text-uppercase font-weight-bold text-white" href="javascript:void(0);">Quienes Somos</a>
-					</li>
-					<li class="nav-item d-block d-lg-none">
-						<a class="h6 nav-link text-uppercase font-weight-bold text-white" href="javascript:void(0);">Excurciones</a>
-					</li>
-					<li class="nav-item d-block d-lg-none">
-						<a class="h6 nav-link text-uppercase font-weight-bold text-white" href="javascript:void(0);">Galeria</a>
-					</li>
-					<li class="nav-item d-block d-lg-none">
-						<a class="h6 nav-link text-uppercase font-weight-bold text-white" href="javascript:void(0);">Contactos</a>
-					</li>
-				</ul>
-				<div class="form-inline position-relative d-none d-lg-inline-block pl-2 pl-xl-5">
-					<a class="font-weight-bold text-uppercase py-2 px-2 px-xl-3 mr-2" href="javascript:void(0);">Inicio</a>
-					<a class="font-weight-bold text-uppercase py-2 px-2 px-xl-3 mr-2" href="javascript:void(0);">Quienes Somos</a>
-					<a class="font-weight-bold text-uppercase py-2 px-2 px-xl-3 mr-2" href="javascript:void(0);">Excurciones</a>
-					<a class="font-weight-bold text-uppercase py-2 px-2 px-xl-3 mr-2" href="javascript:void(0);">Galeria</a>
-					<a class="font-weight-bold text-uppercase py-2 px-2 px-xl-3" href="javascript:void(0);">Contactos</a>
-				</div>
-			</div>
+<header id="header">
+	<div class="container-fluid">
+
+		<div id="logo" class="pull-left">
+			<h1><a href="{{ route('home', ['lang' => $lang]) }}">LOGO</a></h1>
+			<!-- <a href="#intro"><img src="img/logo.png" alt="" title="" /></a>-->
 		</div>
-	</nav>
+
+		<nav id="nav-menu-container">
+			<ul class="nav-menu">
+				<li class="menu-active"><a href="{{ route('home', ['lang' => $lang]) }}">@lang('messages.home')</a></li>
+				<li><a href="{{ route('home', ['lang' => $lang]) }}#about">@lang('messages.about')</a></li>
+				<li><a href="{{ route('home', ['lang' => $lang]) }}#excursions">@lang('messages.excursions')</a></li>
+				<li><a href="{{ route('home', ['lang' => $lang]) }}#gallery">@lang('messages.gallery')</a></li>
+				<li><a href="{{ route('home', ['lang' => $lang]) }}#contact">@lang('messages.contacts')</a></li>
+				<li class="menu-has-children"><a href="javascript:void(0);">@if($lang=="es")@lang('messages.spanish')@else@lang('messages.english')@endif</a>
+					<ul>
+						<li><a class="text-uppercase" href="{{ route('home', ['lang' => 'es']) }}">@lang('messages.spanish')</a></li>
+						<li><a class="text-uppercase" href="{{ route('home', ['lang' => 'en']) }}">@lang('messages.english')</a></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</header>
+
+@else
+
+<header class="navbar-fixed header-fixed-top bg-black" id="header">
+	<div class="container-fluid">
+
+		<div id="logo" class="pull-left">
+			<h1><a href="{{ route('home', ['lang' => $lang]) }}">LOGO</a></h1>
+			<!-- <a href="#intro"><img src="img/logo.png" alt="" title="" /></a>-->
+		</div>
+
+		<nav id="nav-menu-container">
+			<ul class="nav-menu">
+				<li class="menu-active"><a href="{{ route('home', ['lang' => $lang]) }}">@lang('messages.home')</a></li>
+				<li><a href="{{ route('home', ['lang' => $lang]) }}#about">@lang('messages.about')</a></li>
+				<li><a href="{{ route('home', ['lang' => $lang]) }}#excursions">@lang('messages.excursions')</a></li>
+				<li><a href="{{ route('home', ['lang' => $lang]) }}#gallery">@lang('messages.gallery')</a></li>
+				<li><a href="{{ route('home', ['lang' => $lang]) }}#contact">@lang('messages.contacts')</a></li>
+				<li class="menu-has-children"><a href="javascript:void(0);">@if($lang=="es")@lang('messages.spanish')@else@lang('messages.english')@endif</a>
+					<ul>
+						<li><a class="text-uppercase" href="{{ route('home', ['lang' => 'es']) }}">@lang('messages.spanish')</a></li>
+						<li><a class="text-uppercase" href="{{ route('home', ['lang' => 'en']) }}">@lang('messages.english')</a></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</header>
+
+@endif

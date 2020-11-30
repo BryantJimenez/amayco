@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Language;
 use App\Category;
+use App\Http\Requests\CategoryStoreRequest;
+use App\Http\Requests\CategoryUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 
 class CategoryController extends Controller
 {
@@ -16,8 +18,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::where('state', '=', '1')->orderBy('id', 'DESC')->get();
-        $num = 1;
+        $categories=Category::orderBy('id', 'DESC')->get();
+        $num=1;
         return view('admin.categories.index', compact('categories', 'num'));
     }
 
@@ -28,7 +30,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        $languages=Language::all();
+        return view('admin.categories.create', compact('languages'));
     }
 
     /**
@@ -37,10 +40,10 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
-        $count=Category::where('name', request('name'))->where('lang', request('lang'))->count();
-        $slug=Str::slug(request('name')." ".request('lang'), '-');
+        $count=Category::where('name', request('name'))->count();
+        $slug=Str::slug(request('name'), '-');
         if ($count>0) {
             $slug=$slug."-".$count;
         }
@@ -50,10 +53,11 @@ class CategoryController extends Controller
         while (true) {
             $count2=Category::where('slug', $slug)->count();
             if ($count2>0) {
-                $slug=Str::slug(request('name')." ".request('lang'), '-')."-".$num;
+                $slug=Str::slug(request('name'), '-')."-".$num;
                 $num++;
             } else {
-                $data=array('name' => request('name'),'slug' => $slug, 'lang' => request('lang'));
+                $language=Language::where('slug', request('language_id'))->firstOrFail();
+                $data=array('name' => request('name'), 'slug' => $slug, 'language_id' => $language->id);
                 break;
             }
         }
@@ -61,21 +65,10 @@ class CategoryController extends Controller
         $category=Category::create($data);
 
         if ($category) {
-            return redirect()->route('category.index')->with(['type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'La Categoría ha sido registrado exitosamente.']);
+            return redirect()->route('categorias.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'La categoría ha sido registrada exitosamente.']);
         } else {
-            return redirect()->route('category.index')->with(['type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('categorias.create')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.'])->withInputs();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
-    {
-        //
     }
 
     /**
@@ -86,8 +79,9 @@ class CategoryController extends Controller
      */
     public function edit($slug)
     {
-        $category = Category::where('slug', $slug)->firstOrFail();
-        return view('admin.categories.edit', compact("category"));
+        $category=Category::where('slug', $slug)->firstOrFail();
+        $languages=Language::all();
+        return view('admin.categories.edit', compact("category", "languages"));
     }
 
     /**
@@ -97,18 +91,17 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $slug)
+    public function update(CategoryUpdateRequest $request, $slug)
     {
         $category=Category::where('slug', $slug)->firstOrFail();
-
-        $data=array('name' => request('name'),'slug' => $slug, 'lang' => request('lang'));
-
+        $language=Language::where('slug', request('language_id'))->firstOrFail();
+        $data=array('name' => request('name'), 'language_id' => $language->id);
         $category->fill($data)->save();
 
         if ($category) {
-            return redirect()->route('category.edit', ['slug' => $slug])->with(['type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La Categoría ha sido editado exitosamente.']);
+            return redirect()->route('categorias.edit', ['slug' => $slug])->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La categoría ha sido editada exitosamente.']);
         } else {
-            return redirect()->route('category.edit', ['slug' => $slug])->with(['type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('categorias.edit', ['slug' => $slug])->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 
@@ -121,24 +114,24 @@ class CategoryController extends Controller
     public function deactivate(Request $request, $slug) {
 
         $category = Category::where('slug', $slug)->firstOrFail();
-        $category->fill($request->all())->save();
+        $category->fill(['state' => "0"])->save();
 
         if ($category) {
-            return redirect()->route('category.index')->with(['type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La Categoría ha sido desactivada exitosamente.']);
+            return redirect()->route('categorias.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La categoría ha sido desactivada exitosamente.']);
         } else {
-            return redirect()->route('category.index')->with(['type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('categorias.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 
     public function activate(Request $request, $slug) {
 
         $category = Category::where('slug', $slug)->firstOrFail();
-        $category->fill($request->all())->save();
+        $category->fill(['state' => "1"])->save();
 
         if ($category) {
-            return redirect()->route('category.index')->with(['type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La Categoría ha sido activada exitosamente.']);
+            return redirect()->route('categorias.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La categoría ha sido activada exitosamente.']);
         } else {
-            return redirect()->route('category.index')->with(['type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('categorias.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 
@@ -153,9 +146,9 @@ class CategoryController extends Controller
         $category->delete();
 
         if ($category) {
-            return redirect()->route('category.index')->with(['type' => 'success', 'title' => 'Eliminación exitosa', 'msg' => 'La Categoría ha sido eliminada exitosamente.']);
+            return redirect()->route('categorias.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Eliminación exitosa', 'msg' => 'La categoría ha sido eliminada exitosamente.']);
         } else {
-            return redirect()->route('category.index')->with(['type' => 'error', 'title' => 'Eliminación fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('categorias.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Eliminación fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 }

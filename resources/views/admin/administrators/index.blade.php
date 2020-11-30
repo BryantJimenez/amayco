@@ -9,6 +9,7 @@
 <link href="{{ asset('/admins/vendor/sweetalerts/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('/admins/vendor/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('/admins/css/components/custom-sweetalert.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{{ asset('/admins/vendor/lobibox/Lobibox.min.css') }}">
 @endsection
 
 @section('content')
@@ -49,7 +50,9 @@
 									@foreach($admins as $admin)
 									<tr>
 										<td>{{ $num++ }}</td>
-										<td>{{ $admin->name." ".$admin->lastname }}</td>
+										<td class="d-flex">
+											<img src="{{ image_exist('/admins/img/admins/', $admin->photo, true) }}" class="rounded-circle mr-2" width="45" height="45" alt="{{ $admin->name." ".$admin->lastname }}"> {{ $admin->name." ".$admin->lastname }}
+										</td>
 										<td>{{ $admin->email }}</td>
 										<td>{{ $admin->phone }}</td>
 										<td>{!! typeUser($admin->type) !!}</td>
@@ -153,4 +156,5 @@
 <script src="{{ asset('/admins/vendor/table/datatable/button-ext/buttons.print.min.js') }}"></script>
 <script src="{{ asset('/admins/vendor/sweetalerts/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('/admins/vendor/sweetalerts/custom-sweetalert.js') }}"></script>
+<script src="{{ asset('/admins/vendor/lobibox/Lobibox.js') }}"></script>
 @endsection

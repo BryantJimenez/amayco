@@ -6,12 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Activity extends Model
 {
-     protected $table = "activities";
+	protected $fillable = ['name', 'slug', 'state', 'language_id'];
 
-	protected $fillable = [
-		'slug',
-		'name',
-		'lang',
-		'state'
-	];
+	public function language() {
+        return $this->belongsTo(Language::class);
+    }
 }

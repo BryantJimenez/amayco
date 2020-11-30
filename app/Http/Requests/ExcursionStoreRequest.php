@@ -24,10 +24,10 @@ class ExcursionStoreRequest extends FormRequest
     public function rules()
     {
         return [
-        'title' => 'required|string|min:2|max:191',
-        'description' => 'required|string|min:2|max:191',
-        'image' => 'required|file|mimetypes:image/*',
-        'lang' => 'required|string'
+            'title' => 'required|string|min:2|max:191',
+            'description' => 'required|string|min:2|max:16770000',
+            'image' => 'required|file|mimetypes:image/*',
+            'language_id' => 'required'
         ];
     }
 }

@@ -24,8 +24,7 @@ class AboutUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'description' => 'required|string|min:2|max:191',
-            'lang' => 'required|string'
+            'about' => 'nullable|string|min:10|max:16770000'
         ];
     }
 }

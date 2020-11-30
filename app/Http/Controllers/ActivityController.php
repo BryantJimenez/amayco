@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Language;
 use App\Activity;
+use App\Http\Requests\ActivityStoreRequest;
+use App\Http\Requests\ActivityUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 
 class ActivityController extends Controller
 {
@@ -16,8 +18,8 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        $activities = Activity::where('state', '=', '1')->orderBy('id', 'DESC')->get();
-        $num = 1;
+        $activities=Activity::orderBy('id', 'DESC')->get();
+        $num=1;
         return view('admin.activities.index', compact('activities', 'num'));
     }
 
@@ -28,7 +30,8 @@ class ActivityController extends Controller
      */
     public function create()
     {
-        return view('admin.activities.create');
+        $languages=Language::all();
+        return view('admin.activities.create', compact('languages'));
     }
 
     /**
@@ -37,10 +40,10 @@ class ActivityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ActivityStoreRequest $request)
     {
-        $count=Activity::where('name', request('name'))->where('lang', request('lang'))->count();
-        $slug=Str::slug(request('name')." ".request('lang'), '-');
+        $count=Activity::where('name', request('name'))->count();
+        $slug=Str::slug(request('name'), '-');
         if ($count>0) {
             $slug=$slug."-".$count;
         }
@@ -50,10 +53,11 @@ class ActivityController extends Controller
         while (true) {
             $count2=Activity::where('slug', $slug)->count();
             if ($count2>0) {
-                $slug=Str::slug(request('name')." ".request('lang'), '-')."-".$num;
+                $slug=Str::slug(request('name'), '-')."-".$num;
                 $num++;
             } else {
-                $data=array('name' => request('name'), 'slug' => $slug, 'lang' => request('lang'));
+                $language=Language::where('slug', request('language_id'))->firstOrFail();
+                $data=array('name' => request('name'), 'slug' => $slug, 'language_id' => $language->id);
                 break;
             }
         }
@@ -61,21 +65,10 @@ class ActivityController extends Controller
         $activity=Activity::create($data);
 
         if ($activity) {
-            return redirect()->route('activity.index')->with(['type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'La Actividad ha sido registrado exitosamente.']);
+            return redirect()->route('actividades.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'La actividad ha sido registrada exitosamente.']);
         } else {
-            return redirect()->route('activity.index')->with(['type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('actividades.create')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.'])->withInputs();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Activity  $activity
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Activity $activity)
-    {
-        //
     }
 
     /**
@@ -86,8 +79,9 @@ class ActivityController extends Controller
      */
     public function edit($slug)
     {
-        $activity = Activity::where('slug', $slug)->firstOrFail();
-        return view('admin.activities.edit', compact("activity"));
+        $activity=Activity::where('slug', $slug)->firstOrFail();
+        $languages=Language::all();
+        return view('admin.activities.edit', compact("activity", "languages"));
     }
 
     /**
@@ -97,18 +91,17 @@ class ActivityController extends Controller
      * @param  \App\Activity  $activity
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $slug)
+    public function update(ActivityUpdateRequest $request, $slug)
     {
         $activity=Activity::where('slug', $slug)->firstOrFail();
-
-        $data=array('name' => request('name'), 'slug' => $slug, 'lang' => request('lang'));
-
+        $language=Language::where('slug', request('language_id'))->firstOrFail();
+        $data=array('name' => request('name'), 'language_id' => $language->id);
         $activity->fill($data)->save();
 
         if ($activity) {
-            return redirect()->route('activity.edit', ['slug' => $slug])->with(['type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La actividad ha sido editado exitosamente.']);
+            return redirect()->route('actividades.edit', ['slug' => $slug])->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La actividad ha sido editada exitosamente.']);
         } else {
-            return redirect()->route('activity.edit', ['slug' => $slug])->with(['type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('actividades.edit', ['slug' => $slug])->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 
@@ -120,25 +113,25 @@ class ActivityController extends Controller
      */
      public function deactivate(Request $request, $slug) {
 
-        $activity = Activity::where('slug', $slug)->firstOrFail();
-        $activity->fill($request->all())->save();
+        $activity=Activity::where('slug', $slug)->firstOrFail();
+        $activity->fill(['state' => "0"])->save();
 
         if ($activity) {
-            return redirect()->route('activity.index')->with(['type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La Actividad ha sido desactivada exitosamente.']);
+            return redirect()->route('actividades.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La actividad ha sido desactivada exitosamente.']);
         } else {
-            return redirect()->route('activity.index')->with(['type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('actividades.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 
     public function activate(Request $request, $slug) {
 
-        $activity = Activity::where('slug', $slug)->firstOrFail();
-        $activity->fill($request->all())->save();
+        $activity=Activity::where('slug', $slug)->firstOrFail();
+        $activity->fill(['state' => "1"])->save();
 
         if ($activity) {
-            return redirect()->route('activity.index')->with(['type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La Actividad ha sido activada exitosamente.']);
+            return redirect()->route('actividades.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La actividad ha sido activada exitosamente.']);
         } else {
-            return redirect()->route('activity.index')->with(['type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('actividades.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 
@@ -153,9 +146,9 @@ class ActivityController extends Controller
         $activity->delete();
 
         if ($activity) {
-            return redirect()->route('activity.index')->with(['type' => 'success', 'title' => 'Eliminación exitosa', 'msg' => 'La Actividad ha sido eliminada exitosamente.']);
+            return redirect()->route('actividades.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Eliminación exitosa', 'msg' => 'La actividad ha sido eliminada exitosamente.']);
         } else {
-            return redirect()->route('activity.index')->with(['type' => 'error', 'title' => 'Eliminación fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('actividades.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Eliminación fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 }

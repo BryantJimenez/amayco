@@ -36,6 +36,16 @@ function typeUser($type, $badge=1) {
 	}
 }
 
+function typeBanner($type) {
+	if ($type==1) {
+		return 'Imagen';
+	} elseif ($type==2) {
+		return 'Video';
+	} else {
+		return 'Desconocido';
+	}
+}
+
 function active($path, $group=null) {
 	if (is_array($path)) {
 		foreach ($path as $url) {
@@ -111,11 +121,12 @@ function selectArray($arrays, $selectedItems) {
 		$select="";
 		if (count($selectedItems)>0) {
 			foreach ($selectedItems as $selected) {
-				if ($selected->slug==$array->slug) {
+				if (is_object($selected) && $selected->slug==$array->slug) {
 					$select="selected";
 					break;
-				} else {
-					$select="";
+				} elseif ($selected==$array->slug) {
+					$select="selected";
+					break;
 				}
 			}
 		}
@@ -124,22 +135,29 @@ function selectArray($arrays, $selectedItems) {
 	return $selects;
 }
 
-function lang($lang) {
-	if ($lang=='es') {
-		return '<span class="badge badge-danger">Español</span>';
-	} elseif ($lang=='en') {
-		return '<span class="badge badge-info">Inglés</span>';
-	} else {
-		return '<span class="badge badge-dark">Desconocido</span>';
+function store_files($file, $file_name, $route) {
+	$image=$file_name.".".$file->getClientOriginalExtension();
+	if (file_exists(public_path().$route.$image)) {
+		unlink(public_path().$route.$image);
 	}
+	$file->move(public_path().$route, $image);
+	return $image;
 }
 
-function reservation($reservation) {
-	if ($reservation=='1') {
-		return '<span class="badge badge-success">Reservas</span>';
-	} elseif ($reservation=='2') {
-		return '<span class="badge badge-default">Cancelación</span>';
+function image_exist($file_route, $image, $user_image=false, $large=true) {
+	if (file_exists(public_path().$file_route.$image)) {
+		$img=asset($file_route.$image);
 	} else {
-		return '<span class="badge badge-dark">Desconocido</span>';
+		if ($user_image) {
+			$img=asset("/admins/img/template/usuario.png");
+		} else {
+			if ($large) {
+				$img=asset("/admins/img/template/imagen.jpg");
+			} else {
+				$img=asset("/admins/img/template/image.jpg");
+			}
+		}
 	}
+
+	return $img;
 }

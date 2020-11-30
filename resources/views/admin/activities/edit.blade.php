@@ -3,10 +3,9 @@
 @section('title', 'Editar Actividad')
 
 @section('links')
-<link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/select2/select2.min.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('/admins/css/forms/switches.css') }}">
-<link rel="stylesheet" href="{{ asset('/admins/vendor/dropify/dropify.min.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/jquery-taginput/jquery.tagsinput.css') }}">
+<link href="{{ asset('/admins/vendor/sweetalerts/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('/admins/vendor/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('/admins/css/components/custom-sweetalert.css') }}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="{{ asset('/admins/vendor/lobibox/Lobibox.min.css') }}">
 @endsection
 
@@ -31,29 +30,29 @@
 						@include('admin.partials.errors')
 
 						<p>Campos obligatorios (<b class="text-danger">*</b>)</p>
-						<form action="{{ route('activity.update', ['slug' => $activity->slug]) }}" method="POST" class="form" id="formActivityEdit" enctype="multipart/form-data">
+						<form action="{{ route('actividades.update', ['slug' => $activity->slug]) }}" method="POST" class="form" id="formActivity">
 							@csrf
 							@method('PUT')
 							<div class="row">
 								<div class="form-group col-6">
 									<label class="col-form-label">Nombre<b class="text-danger">*</b></label>
-									<input class="form-control" type="text" name="name" required placeholder="Introduzca un nombre" value="{{ $activity->name }}">
+									<input class="form-control @error('name') is-invalid @enderror" type="text" name="name" required placeholder="Introduzca un nombre" value="{{ $activity->name }}">
 								</div>
 
 								<div class="form-group col-xl-6 col-lg-6 col-md-6 col-12">
 									<label class="col-form-label">Idioma<b class="text-danger">*</b></label>
-									<select class="form-control" name="lang">
+									<select class="form-control @error('language_id') is-invalid @enderror" name="language_id" required>
 										<option value="">Seleccione</option>
-										<option value="en" @if($activity->lang=='en') selected @endif >Inglés</option>
-										<option value="es" @if($activity->lang=='es') selected @endif >Español</option>
+										@foreach($languages as $language)
+										<option @if($activity->language_id==$language->id) selected @endif value="{{ $language->slug }}" >{{ $language->name }}</option>
+										@endforeach
 									</select>
 								</div>
 
-
 								<div class="form-group col-12">
 									<div class="btn-group" role="group">
-										<button type="submit" class="btn btn-primary" action="activity">Guardar</button>
-										<a href="{{ route('activity.index') }}" class="btn btn-secondary">Volver</a>
+										<button type="submit" class="btn btn-primary" action="activity">Actualizar</button>
+										<a href="{{ route('actividades.index') }}" class="btn btn-secondary">Volver</a>
 									</div>
 								</div> 
 							</div>
@@ -70,14 +69,11 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('/admins/vendor/select2/select2.min.js') }}"></script>
-<script src="{{ asset('/admins/vendor/select2/custom-select2.js') }}"></script>
-<script src="{{ asset('/admins/vendor/dropify/dropify.min.js') }}"></script>
-<script src="{{ asset('/admins/vendor/ckeditor/ckeditor.js') }}"></script>
-<script src="{{ asset('/admins/vendor/jquery-taginput/jquery.tagsinput.js') }}"></script>
 <script src="{{ asset('/admins/vendor/validate/jquery.validate.js') }}"></script>
 <script src="{{ asset('/admins/vendor/validate/additional-methods.js') }}"></script>
 <script src="{{ asset('/admins/vendor/validate/messages_es.js') }}"></script>
 <script src="{{ asset('/admins/js/validate.js') }}"></script>
+<script src="{{ asset('/admins/vendor/sweetalerts/sweetalert2.min.js') }}"></script>
+<script src="{{ asset('/admins/vendor/sweetalerts/custom-sweetalert.js') }}"></script>
 <script src="{{ asset('/admins/vendor/lobibox/Lobibox.js') }}"></script>
 @endsection

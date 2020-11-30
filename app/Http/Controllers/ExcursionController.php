@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Language;
 use App\Excursion;
+use App\Http\Requests\ExcursionStoreRequest;
+use App\Http\Requests\ExcursionUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 
 class ExcursionController extends Controller
 {
@@ -16,8 +18,8 @@ class ExcursionController extends Controller
      */
     public function index()
     {
-        $excursions = Excursion::where('state', '=', '1')->orderBy('id', 'DESC')->get();
-        $num = 1;
+        $excursions=Excursion::orderBy('id', 'DESC')->get();
+        $num=1;
         return view('admin.excursions.index', compact('excursions', 'num'));
     }
 
@@ -28,7 +30,8 @@ class ExcursionController extends Controller
      */
     public function create()
     {
-        return view('admin.excursions.create');
+        $languages=Language::all();
+        return view('admin.excursions.create', compact('languages'));
     }
 
     /**
@@ -37,10 +40,10 @@ class ExcursionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ExcursionStoreRequest $request)
     {
-        $count=Excursion::where('title', request('title'))->where('lang', request('lang'))->count();
-        $slug=Str::slug(request('title')." ".request('lang'), '-');
+        $count=Excursion::where('title', request('title'))->count();
+        $slug=Str::slug(request('title'), '-');
         if ($count>0) {
             $slug=$slug."-".$count;
         }
@@ -50,10 +53,11 @@ class ExcursionController extends Controller
         while (true) {
             $count2=Excursion::where('slug', $slug)->count();
             if ($count2>0) {
-                $slug=Str::slug(request('title')." ".request('lang'), '-')."-".$num;
+                $slug=Str::slug(request('title'), '-')."-".$num;
                 $num++;
             } else {
-                $data=array('title' => request('title'), 'slug' => $slug, 'lang' => request('lang'), 'description' => request('description'));
+                $language=Language::where('slug', request('language_id'))->firstOrFail();
+                $data=array('title' => request('title'), 'slug' => $slug, 'description' => request('description'), 'language_id' => $language->id);
                 break;
             }
         }
@@ -61,29 +65,16 @@ class ExcursionController extends Controller
         // Mover imagen a carpeta excursions y extraer nombre
         if ($request->hasFile('image')) {
             $file=$request->file('image');
-            $image=time()."_".$file->getClientOriginalName();
-            $file->move(public_path().'/admins/img/excursions/', $image);
-            $data['image']=$image;
+            $data['image']=store_files($file, $slug, '/admins/img/excursions/');
         }
 
         $excursion=Excursion::create($data);
 
         if ($excursion) {
-            return redirect()->route('excursion.index')->with(['type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'La Excursión ha sido registrado exitosamente.']);
+            return redirect()->route('excursiones.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'La excursión ha sido registrado exitosamente.']);
         } else {
-            return redirect()->route('excursion.index')->with(['type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('excursiones.create')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.'])->withInputs();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Excursions  $excursions
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Excursions $excursions)
-    {
-        //
     }
 
     /**
@@ -94,8 +85,9 @@ class ExcursionController extends Controller
      */
     public function edit($slug)
     {
-        $excursion = Excursion::where('slug', $slug)->firstOrFail();
-        return view('admin.excursions.edit', compact("excursion"));
+        $excursion=Excursion::where('slug', $slug)->firstOrFail();
+        $languages=Language::all();
+        return view('admin.excursions.edit', compact("excursion", "languages"));
     }
 
     /**
@@ -105,27 +97,24 @@ class ExcursionController extends Controller
      * @param  \App\Excursions  $excursions
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $slug)
+    public function update(ExcursionUpdateRequest $request, $slug)
     {
         $excursion=Excursion::where('slug', $slug)->firstOrFail();
-
-        $data=array('title' => request('title'), 'slug' => $slug, 'lang' => request('lang'), 'description' => request('description'));
+        $language=Language::where('slug', request('language_id'))->firstOrFail();
+        $data=array('title' => request('title'), 'description' => request('description'), 'language_id' => $language->id);
 
         // Mover imagen a carpeta excursions y extraer nombre
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $image = time()."_".$slug;
-            $file->move(public_path().'/admins/img/excursions/', $image);
-            $data['image'] = $image;
+            $file=$request->file('image');
+            $data['image']=store_files($file, $slug, '/admins/img/excursions/');
         }
-
     
         $excursion->fill($data)->save();
 
         if ($excursion) {
-            return redirect()->route('excursion.edit', ['slug' => $slug])->with(['type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La Excursión ha sido editado exitosamente.']);
+            return redirect()->route('excursiones.edit', ['slug' => $slug])->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La excursión ha sido editado exitosamente.']);
         } else {
-            return redirect()->route('excursion.edit', ['slug' => $slug])->with(['type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('excursiones.edit', ['slug' => $slug])->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 
@@ -136,26 +125,24 @@ class ExcursionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function deactivate(Request $request, $slug) {
-
-        $excursion = Excursion::where('slug', $slug)->firstOrFail();
-        $excursion->fill($request->all())->save();
+        $excursion=Excursion::where('slug', $slug)->firstOrFail();
+        $excursion->fill(['state' => '0'])->save();
 
         if ($excursion) {
-            return redirect()->route('excursion.index')->with(['type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La Excurción ha sido desactivada exitosamente.']);
+            return redirect()->route('excursiones.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La excursión ha sido desactivada exitosamente.']);
         } else {
-            return redirect()->route('excursion.index')->with(['type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('excursiones.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 
     public function activate(Request $request, $slug) {
-
-        $excursion = Excursion::where('slug', $slug)->firstOrFail();
-        $excursion->fill($request->all())->save();
+        $excursion=Excursion::where('slug', $slug)->firstOrFail();
+        $excursion->fill(['state' => '1'])->save();
 
         if ($excursion) {
-            return redirect()->route('excursion.index')->with(['type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La Excurción ha sido activada exitosamente.']);
+            return redirect()->route('excursiones.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'La excursión ha sido activada exitosamente.']);
         } else {
-            return redirect()->route('excursion.index')->with(['type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('excursiones.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 
@@ -170,9 +157,21 @@ class ExcursionController extends Controller
         $excursion->delete();
 
         if ($excursion) {
-            return redirect()->route('excursion.index')->with(['type' => 'success', 'title' => 'Eliminación exitosa', 'msg' => 'La Excurción ha sido eliminada exitosamente.']);
+            return redirect()->route('excursiones.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Eliminación exitosa', 'msg' => 'La excursión ha sido eliminada exitosamente.']);
         } else {
-            return redirect()->route('excursion.index')->with(['type' => 'error', 'title' => 'Eliminación fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('excursiones.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Eliminación fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
+    }
+
+    public function search(Request $request) {
+        $count=Excursion::where('slug', request('slug'))->count();
+        if ($count>0) {
+            $excursion=Excursion::where('slug', request('slug'))->first();
+            if (!is_null($excursion)) {
+                return response()->json(['status' => true, 'title' => $excursion->title, 'description' => $excursion->description]);
+            }
+        }
+
+        return response()->json(['status' => false]);
     }
 }

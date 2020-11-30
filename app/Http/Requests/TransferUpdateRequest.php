@@ -24,9 +24,9 @@ class TransferUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-        'name' => 'required|string|min:2|max:191',
-        'description' => 'required|string|min:5|max:191',
-        'lang' => 'required'
+            'title' => 'required|string|min:2|max:191',
+            'description' => 'required|string|min:2|max:1000',
+            'language_id' => 'required'
         ];
     }
 }

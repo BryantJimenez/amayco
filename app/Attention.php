@@ -6,12 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Attention extends Model
 {
-    protected $table = "attentions";
+	protected $fillable = ['slug', 'attention', 'schedule', 'language_id'];
 
-	protected $fillable = [
-		'slug',
-		'attention',
-		'state',
-		'lang'
-	];
+	public function language() {
+        return $this->belongsTo(Language::class);
+    }
 }

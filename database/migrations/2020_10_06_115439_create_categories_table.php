@@ -17,9 +17,12 @@ class CreateCategoriesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('lang');
             $table->enum('state', [0, 1])->default(1);
+            $table->bigInteger('language_id')->unsigned();
             $table->timestamps();
+
+            #Relations
+            $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

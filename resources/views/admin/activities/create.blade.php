@@ -3,10 +3,6 @@
 @section('title', 'Crear Actividad')
 
 @section('links')
-<link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/select2/select2.min.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('/admins/css/forms/switches.css') }}">
-<link rel="stylesheet" href="{{ asset('/admins/vendor/dropify/dropify.min.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('/admins/vendor/jquery-taginput/jquery.tagsinput.css') }}">
 <link rel="stylesheet" href="{{ asset('/admins/vendor/lobibox/Lobibox.min.css') }}">
 @endsection
 
@@ -31,28 +27,28 @@
 						@include('admin.partials.errors')
 
 						<p>Campos obligatorios (<b class="text-danger">*</b>)</p>
-						<form action="{{ route('activity.store') }}" method="POST" class="form" id="formActivityCreate" enctype="multipart/form-data">
+						<form action="{{ route('actividades.store') }}" method="POST" class="form" id="formActivity">
 							@csrf
 							<div class="row">
 								<div class="form-group col-6">
 									<label class="col-form-label">Nombre<b class="text-danger">*</b></label>
-									<input class="form-control" type="text" name="name" required placeholder="Introduzca un nombre" value="{{ old('name') }}">
+									<input class="form-control @error('name') is-invalid @enderror" type="text" name="name" required placeholder="Introduzca un nombre" value="{{ old('name') }}">
 								</div>
 
 								<div class="form-group col-xl-6 col-lg-6 col-md-6 col-12">
 									<label class="col-form-label">Idioma<b class="text-danger">*</b></label>
-									<select class="form-control" name="lang">
+									<select class="form-control @error('language_id') is-invalid @enderror" name="language_id" required>
 										<option value="">Seleccione</option>
-										<option value="en" >Inglés</option>
-										<option value="es" >Español</option>
+										@foreach($languages as $language)
+										<option @if(old('language_id')==$language->slug) selected @endif value="{{ $language->slug }}" >{{ $language->name }}</option>
+										@endforeach
 									</select>
 								</div>
-
 
 								<div class="form-group col-12">
 									<div class="btn-group" role="group">
 										<button type="submit" class="btn btn-primary" action="activity">Guardar</button>
-										<a href="{{ route('activity.index') }}" class="btn btn-secondary">Volver</a>
+										<a href="{{ route('actividades.index') }}" class="btn btn-secondary">Volver</a>
 									</div>
 								</div> 
 							</div>
@@ -69,11 +65,6 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('/admins/vendor/select2/select2.min.js') }}"></script>
-<script src="{{ asset('/admins/vendor/select2/custom-select2.js') }}"></script>
-<script src="{{ asset('/admins/vendor/dropify/dropify.min.js') }}"></script>
-<script src="{{ asset('/admins/vendor/ckeditor/ckeditor.js') }}"></script>
-<script src="{{ asset('/admins/vendor/jquery-taginput/jquery.tagsinput.js') }}"></script>
 <script src="{{ asset('/admins/vendor/validate/jquery.validate.js') }}"></script>
 <script src="{{ asset('/admins/vendor/validate/additional-methods.js') }}"></script>
 <script src="{{ asset('/admins/vendor/validate/messages_es.js') }}"></script>

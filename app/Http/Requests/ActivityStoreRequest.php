@@ -25,7 +25,7 @@ class ActivityStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:2|max:191',
-            'lang' => 'required|string'
-            ];
-        }
+            'language_id' => 'required'
+        ];
     }
+}

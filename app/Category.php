@@ -6,16 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $table = "categories";
+	protected $fillable = ['slug', 'name', 'state', 'language_id'];
 
-	protected $fillable = [
-		'slug',
-		'name',
-		'state',
-		'lang'
-	];
+	public function language() {
+        return $this->belongsTo(Language::class);
+    }
 
-	public function galeries() {
-        return $this->hasMany(Galery::class);
+	public function galleries() {
+        return $this->hasMany(Gallery::class);
     }
 }

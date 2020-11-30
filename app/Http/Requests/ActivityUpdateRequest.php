@@ -24,8 +24,8 @@ class ActivityUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-        'name' => 'required|string|min:2|max:191',
-        'lang' => 'required|string'
+            'name' => 'required|string|min:2|max:191',
+            'language_id' => 'required'
         ];
     }
 }

@@ -256,9 +256,9 @@ $(document).ready(function(){
 		});
 	});
 
-	// Banners Create
+	// Banners
 	$("button[action='banner']").on("click",function(){
-		$("#formBannerCreate").validate({
+		$("#formBanner").validate({
 			rules:
 			{
 				title: {
@@ -267,15 +267,15 @@ $(document).ready(function(){
 					maxlength: 191
 				},
 
-				featured: {
+				type: {
 					required: true
 				},
 
-				state: {
+				language_id: {
 					required: true
 				},
 
-				image: {
+				archive: {
 					required: true
 				}
 			},
@@ -286,16 +286,16 @@ $(document).ready(function(){
 					maxlength: 'Escribe máximo {0} caracteres.'
 				},
 
-				featured: {
+				type: {
 					required: 'Seleccione una opción.'
 				},
 
-				state: {
+				language_id: {
 					required: 'Seleccione una opción.'
 				},
 
-				image: {
-					required: 'Seleccione una imagen.'
+				archive: {
+					required: 'Seleccione una imagen o video.'
 				}
 			},
 			submitHandler: function(form) {
@@ -316,11 +316,11 @@ $(document).ready(function(){
 					maxlength: 191
 				},
 
-				featured: {
+				type: {
 					required: true
 				},
 
-				state: {
+				language_id: {
 					required: true
 				}
 			},
@@ -331,11 +331,11 @@ $(document).ready(function(){
 					maxlength: 'Escribe máximo {0} caracteres.'
 				},
 
-				featured: {
+				type: {
 					required: 'Seleccione una opción.'
 				},
 
-				state: {
+				language_id: {
 					required: 'Seleccione una opción.'
 				}
 			},
@@ -346,38 +346,61 @@ $(document).ready(function(){
 		});
 	});
 
-	// Noticias Create
-	$("button[action='new']").on("click",function(){
-		$("#formNewCreate").validate({
+	// Categorias
+	$("button[action='category']").on("click",function(){
+		$("#formCategory").validate({
 			rules:
 			{
+				name: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				language_id: {
+					required: true
+				}
+			},
+			messages:
+			{
+				name: {
+					minlength: 'Escribe mínimo {0} caracteres.',
+					maxlength: 'Escribe máximo {0} caracteres.'
+				},
+
+				language_id: {
+					required: 'Seleccione una opción.'
+				}
+			},
+			submitHandler: function(form) {
+				$("button[action='category']").attr('disabled', true);
+				form.submit();
+			}
+		});
+	});
+
+	// Galeria Create
+	$("button[action='gallery']").on("click",function(){
+		$("#formGallery").validate({
+			rules:
+			{
+				category_id: {
+					required: true
+				},
+
 				title: {
 					required: true,
 					minlength: 2,
 					maxlength: 191
 				},
 
-				summary: {
+				description: {
 					required: true,
 					minlength: 2,
-					maxlength: 16770000
-				},
-
-				content: {
-					required: true,
-					minlength: 2,
-					maxlength: 16770000
+					maxlength: 1000
 				},
 				
-				comments: {
-					required: true
-				},
-
-				featured: {
-					required: false
-				},
-
-				state: {
+				language_id: {
 					required: true
 				},
 
@@ -387,26 +410,21 @@ $(document).ready(function(){
 			},
 			messages:
 			{
+				category_id: {
+					required: 'Seleccione una opción.'
+				},
+
 				title: {
 					minlength: 'Escribe mínimo {0} caracteres.',
 					maxlength: 'Escribe máximo {0} caracteres.'
 				},
 
-				summary: {
+				description: {
 					minlength: 'Escribe mínimo {0} caracteres.',
 					maxlength: 'Escribe máximo {0} caracteres.'
 				},
 
-				content: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				comments: {
-					required: 'Seleccione una opción.'
-				},
-
-				state: {
+				language_id: {
 					required: 'Seleccione una opción.'
 				},
 
@@ -415,84 +433,71 @@ $(document).ready(function(){
 				}
 			},
 			submitHandler: function(form) {
-				$("button[action='new']").attr('disabled', true);
+				$("button[action='gallery']").attr('disabled', true);
 				form.submit();
 			}
 		});
 	});
 
-	// Noticias Edit
-	$("button[action='new']").on("click",function(){
-		$("#formNewEdit").validate({
+	// Galery Edit
+	$("button[action='gallery']").on("click",function(){
+		$("#formGalleryEdit").validate({
 			rules:
 			{
+				category_id: {
+					required: true
+				},
+
 				title: {
 					required: true,
 					minlength: 2,
 					maxlength: 191
 				},
 
-				summary: {
+				description: {
 					required: true,
 					minlength: 2,
-					maxlength: 16770000
+					maxlength: 1000
 				},
 
-				content: {
-					required: true,
-					minlength: 2,
-					maxlength: 16770000
-				},
-
-				comments: {
+				lang: {
 					required: true
 				},
 
-
-				featured: {
+				image: {
 					required: false
-				},
-
-				state: {
-					required: true
-				},
+				}
 			},
 			messages:
 			{
+				category_id: {
+					required: 'Seleccione una opción.'
+				},
+
 				title: {
 					minlength: 'Escribe mínimo {0} caracteres.',
 					maxlength: 'Escribe máximo {0} caracteres.'
 				},
 
-				summary: {
+				description: {
 					minlength: 'Escribe mínimo {0} caracteres.',
 					maxlength: 'Escribe máximo {0} caracteres.'
 				},
 
-				content: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				comments: {
-					required: 'Seleccione una opción.'
-				},
-
-				state: {
+				language_id: {
 					required: 'Seleccione una opción.'
 				}
 			},
 			submitHandler: function(form) {
-				$("button[action='new']").attr('disabled', true);
+				$("button[action='gallery']").attr('disabled', true);
 				form.submit();
 			}
 		});
 	});
 
-
-		// Actividades Create
+	// Actividades
 	$("button[action='activity']").on("click",function(){
-		$("#formActivityCreate").validate({
+		$("#formActivity").validate({
 			rules:
 			{
 				name: {
@@ -501,7 +506,7 @@ $(document).ready(function(){
 					maxlength: 191
 				},
 
-				lang: {
+				language_id: {
 					required: true
 				}
 			},
@@ -512,7 +517,7 @@ $(document).ready(function(){
 					maxlength: 'Escribe máximo {0} caracteres.'
 				},
 
-				lang: {
+				language_id: {
 					required: 'Seleccione una opción.'
 				}
 			},
@@ -523,172 +528,9 @@ $(document).ready(function(){
 		});
 	});
 
-	// Actividades Edit
-	$("button[action='activity']").on("click",function(){
-		$("#formActivityEdit").validate({
-			rules:
-			{
-				name: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-
-				lang: {
-					required: true
-				}
-			},
-			messages:
-			{
-				name: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				lang: {
-					required: 'Seleccione una opción.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='activity']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-	$("button[action='attention']").on("click",function(){
-		$("#formAttentionCreate").validate({
-			rules:
-			{
-				attention: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-
-				lang: {
-					required: true
-				}
-			},
-			messages:
-			{
-				attention: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				lang: {
-					required: 'Seleccione una opción.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='attention']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-	// attentions Edit
-	$("button[action='attention']").on("click",function(){
-		$("#formAttentionEdit").validate({
-			rules:
-			{
-				attention: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-
-				lang: {
-					required: true
-				}
-			},
-			messages:
-			{
-				attention: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				lang: {
-					required: 'Seleccione una opción.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='attention']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-	$("button[action='category']").on("click",function(){
-		$("#formCategoryCreate").validate({
-			rules:
-			{
-				name: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-
-				lang: {
-					required: true
-				}
-			},
-			messages:
-			{
-				name: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				lang: {
-					required: 'Seleccione una opción.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='category']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-	// categorys Edit
-	$("button[action='category']").on("click",function(){
-		$("#formCategoryEdit").validate({
-			rules:
-			{
-				name: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-
-				lang: {
-					required: true
-				}
-			},
-			messages:
-			{
-				name: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				lang: {
-					required: 'Seleccione una opción.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='category']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-
+	// Excursiones
 	$("button[action='excursion']").on("click",function(){
-		$("#formExcursionCreate").validate({
+		$("#formExcursion").validate({
 			rules:
 			{
 				title: {
@@ -703,7 +545,7 @@ $(document).ready(function(){
 					maxlength: 16770000
 				},
 				
-				lang: {
+				language_id: {
 					required: true
 				},
 
@@ -723,7 +565,7 @@ $(document).ready(function(){
 					maxlength: 'Escribe máximo {0} caracteres.'
 				},
 
-				lang: {
+				language_id: {
 					required: 'Seleccione una opción.'
 				},
 
@@ -738,7 +580,7 @@ $(document).ready(function(){
 		});
 	});
 
-	// Noticias Edit
+	// Excursiones Edit
 	$("button[action='excursion']").on("click",function(){
 		$("#formExcursionEdit").validate({
 			rules:
@@ -755,7 +597,11 @@ $(document).ready(function(){
 					maxlength: 16770000
 				},
 
-				lang: {
+				image: {
+					required: false
+				},
+
+				language_id: {
 					required: true
 				}
 			},
@@ -771,7 +617,7 @@ $(document).ready(function(){
 					maxlength: 'Escribe máximo {0} caracteres.'
 				},
 
-				lang: {
+				language_id: {
 					required: 'Seleccione una opción.'
 				}
 			},
@@ -782,470 +628,34 @@ $(document).ready(function(){
 		});
 	});
 
-	$("button[action='galery']").on("click",function(){
-		$("#formGaleryCreate").validate({
+	// Atenciones
+	$("button[action='about']").on("click",function(){
+		$("#formAbout").validate({
 			rules:
 			{
-				category_id: {
-					required: true
-				},
-
-				title: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-
-				description: {
-					required: true,
-					minlength: 2,
+				about: {
+					required: false,
+					minlength: 10,
 					maxlength: 16770000
-				},
-				
-				lang: {
-					required: true
-				},
-
-				image: {
-					required: true
 				}
 			},
 			messages:
 			{
-				category_id: {
-					required: 'Seleccione una opción.'
-				},
-
-				title: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				description: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				lang: {
-					required: 'Seleccione una opción.'
-				},
-
-				image: {
-					required: 'Seleccione una imagen.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='galery']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-	// Galery Edit
-	$("button[action='galery']").on("click",function(){
-		$("#formGaleryEdit").validate({
-			rules:
-			{
-				category_id: {
-					required: true
-				},
-
-				title: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-
-				description: {
-					required: true,
-					minlength: 2,
-					maxlength: 16770000
-				},
-
-				lang: {
-					required: true
-				}
-			},
-			messages:
-			{
-				category_id: {
-					required: 'Seleccione una opción.'
-				},
-
-				title: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				description: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				lang: {
-					required: 'Seleccione una opción.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='galery']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-		$("button[action='home']").on("click",function(){
-		$("#formHomeCreate").validate({
-			rules:
-			{
-				title_one: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-
-				title_two: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-
-				title_three: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-				
-				lang: {
-					required: true
-				},
-
-				image: {
-					required: true
-				}
-			},
-			messages:
-			{
-				title_one: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				title_two: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				title_three: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				lang: {
-					required: 'Seleccione una opción.'
-				},
-
-				image: {
-					required: 'Seleccione una imagen.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='home']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-	// Galery Edit
-	$("button[action='home']").on("click",function(){
-		$("#formHomeEdit").validate({
-			rules:
-			{
-				title_one: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-
-				title_two: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-
-				title_three: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-				
-				lang: {
-					required: true
-				},
-			},
-			messages:
-			{
-				title_one: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				title_two: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				title_three: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				lang: {
-					required: 'Seleccione una opción.'
-				},
-
-				image: {
-					required: 'Seleccione una imagen.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='home']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-	$("button[action='office']").on("click",function(){
-		$("#formOfficeCreate").validate({
-			rules:
-			{
-				email: {
-					required: true,
-					email: true,
-					minlength: 5,
-					maxlength: 191
-				},
-
-				phone: {
-					required: false,
-					minlength: 5,
-					maxlength: 15
-				},
-
-				address: {
-					required: false,
-					minlength: 5,
-					maxlength: 15
-				}
-			},
-			messages:
-			{
-				email: {
-					email: 'Introduce una dirección de correo valida.',
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				phone: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				address: {
+				about: {
 					minlength: 'Escribe mínimo {0} caracteres.',
 					maxlength: 'Escribe máximo {0} caracteres.'
 				}
 			},
 			submitHandler: function(form) {
-				$("button[action='office']").attr('disabled', true);
+				$("button[action='about']").attr('disabled', true);
 				form.submit();
 			}
 		});
 	});
 
-	// categorys Edit
-	$("button[action='office']").on("click",function(){
-		$("#formOfficeEdit").validate({
-			rules:
-			{
-				email: {
-					required: true,
-					email: true,
-					minlength: 5,
-					maxlength: 191
-				},
-
-				phone: {
-					required: false,
-					minlength: 5,
-					maxlength: 15
-				},
-
-				address: {
-					required: false,
-					minlength: 5,
-					maxlength: 15
-				}
-			},
-			messages:
-			{
-				email: {
-					email: 'Introduce una dirección de correo valida.',
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				phone: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				address: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='office']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-		$("button[action='reservation']").on("click",function(){
-		$("#formReservationCreate").validate({
-			rules:
-			{
-				reservation: {
-					required: true,
-					minlength: 5,
-					maxlength: 191
-				},
-
-				type: {
-					required: true
-				},
-
-				lang: {
-					required: true
-				}
-			},
-			messages:
-			{
-				reservation: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				type: {
-					required: 'Seleccione una opción.'
-				},
-
-				lang: {
-					required: 'Seleccione una opción.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='reservation']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-	// categorys Edit
-	$("button[action='reservation']").on("click",function(){
-		$("#formReservationEdit").validate({
-			rules:
-			{
-				reservation: {
-					required: true,
-					minlength: 5,
-					maxlength: 191
-				},
-
-				type: {
-					required: true
-				},
-
-				lang: {
-					required: true
-				}
-			},
-			messages:
-			{
-				reservation: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				type: {
-					required: 'Seleccione una opción.'
-				},
-
-				lang: {
-					required: 'Seleccione una opción.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='reservation']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-		$("button[action='transfer']").on("click",function(){
-		$("#formTransferCreate").validate({
-			rules:
-			{
-				title: {
-					required: true,
-					minlength: 2,
-					maxlength: 191
-				},
-
-				description: {
-					required: true,
-					minlength: 2,
-					maxlength: 16770000
-				},
-				
-				lang: {
-					required: true
-				},
-
-				image: {
-					required: true
-				}
-			},
-			messages:
-			{
-				title: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				description: {
-					minlength: 'Escribe mínimo {0} caracteres.',
-					maxlength: 'Escribe máximo {0} caracteres.'
-				},
-
-				lang: {
-					required: 'Seleccione una opción.'
-				},
-
-				image: {
-					required: 'Seleccione una imagen.'
-				}
-			},
-			submitHandler: function(form) {
-				$("button[action='transfer']").attr('disabled', true);
-				form.submit();
-			}
-		});
-	});
-
-	// Noticias Edit
+	// Traslados
 	$("button[action='transfer']").on("click",function(){
-		$("#formTransferEdit").validate({
+		$("#formTransfer").validate({
 			rules:
 			{
 				title: {
@@ -1257,10 +667,10 @@ $(document).ready(function(){
 				description: {
 					required: true,
 					minlength: 2,
-					maxlength: 16770000
+					maxlength: 1000
 				},
 
-				lang: {
+				language_id: {
 					required: true
 				}
 			},
@@ -1276,7 +686,7 @@ $(document).ready(function(){
 					maxlength: 'Escribe máximo {0} caracteres.'
 				},
 
-				lang: {
+				language_id: {
 					required: 'Seleccione una opción.'
 				}
 			},
@@ -1287,6 +697,212 @@ $(document).ready(function(){
 		});
 	});
 
+	// Atenciones
+	$("button[action='attention']").on("click",function(){
+		$("#formAttention").validate({
+			rules:
+			{
+				attention: {
+					required: false,
+					minlength: 10,
+					maxlength: 16770000
+				},
 
+				schedule: {
+					required: false,
+					minlength: 10,
+					maxlength: 16770000
+				}
+			},
+			messages:
+			{
+				attention: {
+					minlength: 'Escribe mínimo {0} caracteres.',
+					maxlength: 'Escribe máximo {0} caracteres.'
+				},
 
+				schedule: {
+					minlength: 'Escribe mínimo {0} caracteres.',
+					maxlength: 'Escribe máximo {0} caracteres.'
+				}
+			},
+			submitHandler: function(form) {
+				$("button[action='attention']").attr('disabled', true);
+				form.submit();
+			}
+		});
+	});
+
+	// Imagenes
+	$("button[action='image']").on("click",function(){
+		$("#formImage").validate({
+			rules:
+			{
+				about_banner: {
+					required: false
+				},
+
+				gallery_banner: {
+					required: false
+				},
+
+				activity_banner: {
+					required: false
+				},
+
+				contact_banner: {
+					required: false
+				}
+			},
+			submitHandler: function(form) {
+				$("button[action='image']").attr('disabled', true);
+				form.submit();
+			}
+		});
+	});
+
+	// Politicas
+	$("button[action='politic']").on("click",function(){
+		$("#formPolitic").validate({
+			rules:
+			{
+				booking: {
+					required: false,
+					minlength: 10,
+					maxlength: 16770000
+				},
+
+				cancellations: {
+					required: false,
+					minlength: 10,
+					maxlength: 16770000
+				}
+			},
+			messages:
+			{
+				booking: {
+					minlength: 'Escribe mínimo {0} caracteres.',
+					maxlength: 'Escribe máximo {0} caracteres.'
+				},
+
+				cancellations: {
+					minlength: 'Escribe mínimo {0} caracteres.',
+					maxlength: 'Escribe máximo {0} caracteres.'
+				}
+			},
+			submitHandler: function(form) {
+				$("button[action='politic']").attr('disabled', true);
+				form.submit();
+			}
+		});
+	});
+
+	//Contacto
+	$("button[action='contact']").on("click",function(){
+		$("#formContact").validate({
+			rules:
+			{
+				phone: {
+					required: false,
+					minlength: 5,
+					maxlength: 20
+				},
+
+				email: {
+					required: false,
+					email: true,
+					minlength: 5,
+					maxlength: 191
+				},
+
+				address: {
+					required: false,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				map: {
+					required: false,
+					minlength: 2,
+					maxlength: 1000
+				}
+			},
+			messages:
+			{
+				phone: {
+					minlength: 'Escribe mínimo {0} caracteres.',
+					maxlength: 'Escribe máximo {0} caracteres.'
+				},
+
+				email: {
+					email: 'Introduce una dirección de correo valida.',
+					minlength: 'Escribe mínimo {0} caracteres.',
+					maxlength: 'Escribe máximo {0} caracteres.'
+				},
+
+				address: {
+					minlength: 'Escribe mínimo {0} caracteres.',
+					maxlength: 'Escribe máximo {0} caracteres.'
+				},
+
+				map: {
+					minlength: 'Escribe mínimo {0} caracteres.',
+					maxlength: 'Escribe máximo {0} caracteres.'
+				}
+			},
+			submitHandler: function(form) {
+				$("button[action='contact']").attr('disabled', true);
+				form.submit();
+			}
+		});
+	});
+
+	//Contacto Web
+	$("button[action='contact']").on("click",function(){
+		$("#formContactWeb").validate({
+			rules:
+			{
+				name: {
+					required: true,
+					minlength: 2,
+					maxlength: 191
+				},
+
+				email: {
+					required: true,
+					email: true,
+					minlength: 5,
+					maxlength: 191
+				},
+
+				message: {
+					required: true,
+					minlength: 5,
+					maxlength: 64000
+				}
+			},
+			messages:
+			{
+				name: {
+					minlength: 'Escribe mínimo {0} caracteres.',
+					maxlength: 'Escribe máximo {0} caracteres.'
+				},
+
+				email: {
+					email: 'Introduce una dirección de correo valida.',
+					minlength: 'Escribe mínimo {0} caracteres.',
+					maxlength: 'Escribe máximo {0} caracteres.'
+				},
+
+				message: {
+					minlength: 'Escribe mínimo {0} caracteres.',
+					maxlength: 'Escribe máximo {0} caracteres.'
+				}
+			},
+			submitHandler: function(form) {
+				$("button[action='contact']").attr('disabled', true);
+				form.submit();
+			}
+		});
+	});
 });

@@ -15,12 +15,15 @@ class CreateTransfersTable extends Migration
     {
         Schema::create('transfers', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('title');
             $table->string('slug')->unique();
-            $table->string('name');
-             $table->string('description');
-            $table->string('lang');
+            $table->string('description');
             $table->enum('state', [0, 1])->default(1);
+            $table->bigInteger('language_id')->unsigned();
             $table->timestamps();
+
+            #Relations
+            $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

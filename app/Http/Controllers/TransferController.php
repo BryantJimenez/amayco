@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Language;
 use App\Transfer;
+use App\Http\Requests\TransferStoreRequest;
+use App\Http\Requests\TransferUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 
 class TransferController extends Controller
 {
@@ -16,8 +18,8 @@ class TransferController extends Controller
      */
     public function index()
     {
-        $transfers = Transfer::where('state', '=', '1')->orderBy('id', 'DESC')->get(); 
-        $num = 1;
+        $transfers=Transfer::orderBy('id', 'DESC')->get(); 
+        $num=1;
         return view('admin.transfers.index', compact('transfers', 'num'));
     }
 
@@ -28,7 +30,8 @@ class TransferController extends Controller
      */
     public function create()
     {
-        return view('admin.transfers.create');
+        $languages=Language::all();
+        return view('admin.transfers.create', compact('languages'));
     }
 
     /**
@@ -37,10 +40,10 @@ class TransferController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TransferStoreRequest $request)
     {
-        $count=Transfer::where('lang', request('lang'))->count();
-        $slug=Str::slug(request('lang'), '-');
+        $count=Transfer::where('title', request('title'))->count();
+        $slug=Str::slug(request('title'), '-');
         if ($count>0) {
             $slug=$slug."-".$count;
         }
@@ -50,10 +53,11 @@ class TransferController extends Controller
         while (true) {
             $count2=Transfer::where('slug', $slug)->count();
             if ($count2>0) {
-                $slug=Str::slug(request('lang'), '-')."-".$num;
+                $slug=Str::slug(request('title'), '-')."-".$num;
                 $num++;
             } else {
-                $data=array('description' => request('description'), 'slug' => $slug, 'lang' => request('lang'), 'name' => request('name'));
+                $language=Language::where('slug', request('language_id'))->firstOrFail();
+                $data=array('title' => request('title'), 'slug' => $slug, 'description' => request('description'), 'language_id' => $language->id);
                 break;
             }
         }
@@ -61,21 +65,10 @@ class TransferController extends Controller
         $transfer=Transfer::create($data);
 
         if ($transfer) {
-            return redirect()->route('transfer.index')->with(['type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'La sección ¿Quiénes Somos? ha sido registrado exitosamente.']);
+            return redirect()->route('traslados.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Registro exitoso', 'msg' => 'La sección ¿Quiénes Somos? ha sido registrado exitosamente.']);
         } else {
-            return redirect()->route('transfer.index')->with(['type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('traslados.create')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Registro fallido', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.'])->withInputs();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Transfer  $transfer
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Transfer $transfer)
-    {
-        //
     }
 
     /**
@@ -86,8 +79,9 @@ class TransferController extends Controller
      */
     public function edit($slug)
     {
-        $transfer = transfer::where('slug', $slug)->firstOrFail();
-        return view('admin.transfers.edit', compact("transfer"));
+        $transfer=transfer::where('slug', $slug)->firstOrFail();
+        $languages=Language::all();
+        return view('admin.transfers.edit', compact("transfer", "languages"));
     }
 
     /**
@@ -97,18 +91,17 @@ class TransferController extends Controller
      * @param  \App\Transfer  $transfer
      * @return \Illuminate\Http\Response
      */
-     public function update(Request $request,  $slug)
+    public function update(TransferUpdateRequest $request,  $slug)
     {
         $transfer=Transfer::where('slug', $slug)->firstOrFail();
-
-        $data=array('description' => request('description'), 'slug' => $slug, 'lang' => request('lang'), 'name' => request('name'));
-
+        $language=Language::where('slug', request('language_id'))->firstOrFail();
+        $data=array('title' => request('title'), 'description' => request('description'), 'language_id' => $language->id);
         $transfer->fill($data)->save();
 
         if ($transfer) {
-            return redirect()->route('transfer.edit', ['slug' => $slug])->with(['type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'El Traslado ha sido editado exitosamente.']);
+            return redirect()->route('traslados.edit', ['slug' => $slug])->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'El Traslado ha sido editado exitosamente.']);
         } else {
-            return redirect()->route('transfer.edit', ['slug' => $slug])->with(['type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('traslados.edit', ['slug' => $slug])->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 
@@ -120,25 +113,25 @@ class TransferController extends Controller
      */
     public function deactivate(Request $request, $slug) {
 
-        $transfer = Transfer::where('slug', $slug)->firstOrFail();
-        $transfer->fill($request->all())->save();
+        $transfer=Transfer::where('slug', $slug)->firstOrFail();
+        $transfer->fill(['state' => "0"])->save();
 
         if ($transfer) {
-            return redirect()->route('transfer.index')->with(['type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'El Traslado ha sido desactivado exitosamente.']);
+            return redirect()->route('traslados.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'El traslado ha sido desactivado exitosamente.']);
         } else {
-            return redirect()->route('transfer.index')->with(['type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('traslados.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 
     public function activate(Request $request, $slug) {
 
-        $transfer = Transfer::where('slug', $slug)->firstOrFail();
-        $transfer->fill($request->all())->save();
+        $transfer=Transfer::where('slug', $slug)->firstOrFail();
+        $transfer->fill(['state' => "1"])->save();
 
         if ($transfer) {
-            return redirect()->route('transfer.index')->with(['type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'El Traslado ha sido activado exitosamente.']);
+            return redirect()->route('traslados.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Edición exitosa', 'msg' => 'El traslado ha sido activado exitosamente.']);
         } else {
-            return redirect()->route('transfer.index')->with(['type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('traslados.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Edición fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 
@@ -153,9 +146,9 @@ class TransferController extends Controller
         $transfer->delete();
 
         if ($transfer) {
-            return redirect()->route('transfer.index')->with(['type' => 'success', 'title' => 'Eliminación exitosa', 'msg' => 'El Traslado ha sido eliminado exitosamente.']);
+            return redirect()->route('traslados.index')->with(['alert' => 'sweet', 'type' => 'success', 'title' => 'Eliminación exitosa', 'msg' => 'El traslado ha sido eliminado exitosamente.']);
         } else {
-            return redirect()->route('transfer.index')->with(['type' => 'error', 'title' => 'Eliminación fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
+            return redirect()->route('traslados.index')->with(['alert' => 'lobibox', 'type' => 'error', 'title' => 'Eliminación fallida', 'msg' => 'Ha ocurrido un error durante el proceso, intentelo nuevamente.']);
         }
     }
 }

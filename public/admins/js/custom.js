@@ -269,25 +269,45 @@ $(document).ready(function() {
     });
   }
 
-   //CKeditor plugin
+  //CKeditor plugin
   if ($('#content-about').length) {
     CKEDITOR.config.height=400;
     CKEDITOR.config.width='auto';
     CKEDITOR.replace('content-about');
   }
 
+  if ($('#content-description').length) {
+    CKEDITOR.config.height=400;
+    CKEDITOR.config.width='auto';
+    CKEDITOR.replace('content-description');
+  }
+
+  if ($('#content-attention').length) {
+    CKEDITOR.config.height=200;
+    CKEDITOR.config.width='auto';
+    CKEDITOR.replace('content-attention');
+  }
+
+  if ($('#content-schedule').length) {
+    CKEDITOR.config.height=200;
+    CKEDITOR.config.width='auto';
+    CKEDITOR.replace('content-schedule');
+  }
+
+  if ($('#content-booking').length) {
+    CKEDITOR.config.height=200;
+    CKEDITOR.config.width='auto';
+    CKEDITOR.replace('content-booking');
+  }
+
+  if ($('#content-cancellations').length) {
+    CKEDITOR.config.height=200;
+    CKEDITOR.config.width='auto';
+    CKEDITOR.replace('content-cancellations');
+  }
 });
 
-// funcion para cambiar el input hidden al cambiar el switch de estado
-$('#stateCheckbox').change(function(event) {
-  if ($(this).is(':checked')) {
-    $('#stateHidden').val(1);
-  } else {
-    $('#stateHidden').val(0);
-  }
-}); 
-
-//funciones para desactivar y activar usuarios
+//funciones para desactivar y activar admins
 function deactiveAdmin(slug) {
   $("#deactiveAdmin").modal();
   $('#formDeactiveAdmin').attr('action', '/admin/administradores/' + slug + '/desactivar');
@@ -296,6 +316,72 @@ function deactiveAdmin(slug) {
 function activeAdmin(slug) {
   $("#activeAdmin").modal();
   $('#formActiveAdmin').attr('action', '/admin/administradores/' + slug + '/activar');
+}
+
+//funciones para desactivar y activar banners
+function deactiveBanner(slug) {
+  $("#deactiveBanner").modal();
+  $('#formDeactiveBanner').attr('action', '/admin/banners/' + slug + '/desactivar');
+}
+
+function activeBanner(slug) {
+  $("#activeBanner").modal();
+  $('#formActiveBanner').attr('action', '/admin/banners/' + slug + '/activar');
+}
+
+//funciones para desactivar y activar categorias
+function deactiveCategory(slug) {
+  $("#deactiveCategory").modal();
+  $('#formDeactiveCategory').attr('action', '/admin/categorias/' + slug + '/desactivar');
+}
+
+function activeCategory(slug) {
+  $("#activeCategory").modal();
+  $('#formActiveCategory').attr('action', '/admin/categorias/' + slug + '/activar');
+}
+
+//funciones para desactivar y activar galeria
+function deactiveGallery(slug) {
+  $("#deactiveGallery").modal();
+  $('#formDeactiveGallery').attr('action', '/admin/galeria/' + slug + '/desactivar');
+}
+
+function activeGallery(slug) {
+  $("#activeGallery").modal();
+  $('#formActiveGallery').attr('action', '/admin/galeria/' + slug + '/activar');
+}
+
+//funciones para desactivar y activar excursiones
+function deactiveExcursion(slug) {
+  $("#deactiveExcursion").modal();
+  $('#formDeactiveExcursion').attr('action', '/admin/excursiones/' + slug + '/desactivar');
+}
+
+function activeExcursion(slug) {
+  $("#activeExcursion").modal();
+  $('#formActiveExcursion').attr('action', '/admin/excursiones/' + slug + '/activar');
+}
+
+//funciones para desactivar y activar actividades
+function deactiveActivity(slug) {
+  $("#deactiveActivity").modal();
+  $('#formDeactiveActivity').attr('action', '/admin/actividades/' + slug + '/desactivar');
+}
+
+function activeActivity(slug) {
+  $("#activeActivity").modal();
+  $('#formActiveActivity').attr('action', '/admin/actividades/' + slug + '/activar');
+}
+
+//funciones para desactivar y activar traslados
+function deactiveTransfer(slug) {
+  $("#deactiveTransfer").modal();
+  $('#formDeactiveTransfer').attr('action', '/admin/traslados/' + slug + '/desactivar');
+}
+
+function activeTransfer(slug) {
+  $("#activeTransfer").modal();
+  $('#formActiveTransfer').attr('action', '/admin/traslados/' + slug + '/activar');
 }
 
 //funciones para preguntar al eliminar
@@ -304,297 +390,32 @@ function deleteAdmin(slug) {
   $('#formDeleteAdmin').attr('action', '/admin/administradores/' + slug);
 }
 
-//funciones para desactivar y activar Home-Page
-function deactiveHome(slug) {
-  $("#deactiveHome").modal();
-  $('#formDeactiveHome').attr('action', '/admin/home-page/' + slug + '/desactivar');
-}
-
-function activeHome(slug) {
-  $("#activeHome").modal();
-  $('#formActiveHome').attr('action', '/admin/home-page/' + slug + '/activar');
-}
-
-//funciones para preguntar al eliminar
-function deleteHome(slug) {
-  $("#deleteHome").modal();
-  $('#formDeleteHome').attr('action', '/admin/home-page/' + slug);
-}
-
-
-//funciones para desactivar y activar about
-function deactiveAbout(slug) {
-  $("#deactiveAbout").modal();
-  $('#formDeactiveAbout').attr('action', '/admin/about/' + slug + '/desactivar');
-}
-
-function activeAbout(slug) {
-  $("#activeAbout").modal();
-  $('#formActiveAbout').attr('action', '/admin/about/' + slug + '/activar');
-}
-
-//funciones para preguntar al eliminar
-function deleteAbout(slug) {
-  $("#deleteAbout").modal();
-  $('#formDeleteAbout').attr('action', '/admin/about/' + slug);
-}
-
-
-//funciones para desactivar y activar excurciones
-function deactiveExcursion(slug) {
-  $("#deactiveExcursion").modal();
-  $('#formDeactiveExcursion').attr('action', '/admin/excursion/' + slug + '/desactivar');
-}
-
-function activeExcursion(slug) {
-  $("#activeExcursion").modal();
-  $('#formActiveExcursion').attr('action', '/admin/excursion/' + slug + '/activar');
-}
-
-//funciones para preguntar al eliminar
-function deleteExcursion(slug) {
-  $("#deleteExcursion").modal();
-  $('#formDeleteExcursion').attr('action', '/admin/excursion/' + slug);
-}
-
-
-//funciones para desactivar y activar galeria
-function deactiveGalery(slug) {
-  $("#deactiveGalery").modal();
-  $('#formDeactiveGalery').attr('action', '/admin/galery/' + slug + '/desactivar');
-}
-
-function activeGalery(slug) {
-  $("#activeGalery").modal();
-  $('#formActiveGalery').attr('action', '/admin/galery/' + slug + '/activar');
-}
-
-//funciones para preguntar al eliminar
-function deleteGalery(slug) {
-  $("#deleteGalery").modal();
-  $('#formDeleteGalery').attr('action', '/admin/galery/' + slug);
-}
-
-
-//funciones para desactivar y activar categorias
-function deactiveCategory(slug) {
-  $("#deactiveCategory").modal();
-  $('#formDeactiveCategory').attr('action', '/admin/category/' + slug + '/desactivar');
-}
-
-function activeCategory(slug) {
-  $("#activeCategory").modal();
-  $('#formActiveCategory').attr('action', '/admin/category/' + slug + '/activar');
-}
-
-//funciones para preguntar al eliminar
-function deleteCategory(slug) {
-  $("#deleteCategory").modal();
-  $('#formDeleteCategory').attr('action', '/admin/category/' + slug);
-}
-
-
-//funciones para desactivar y activar actividades
-function deactiveActivity(slug) {
-  $("#deactiveActivity").modal();
-  $('#formDeactiveActivity').attr('action', '/admin/activity/' + slug + '/desactivar');
-}
-
-function activeActivity(slug) {
-  $("#activeActivity").modal();
-  $('#formActiveActivity').attr('action', '/admin/activity/' + slug + '/activar');
-}
-
-//funciones para preguntar al eliminar
-function deleteActivity(slug) {
-  $("#deleteActivity").modal();
-  $('#formDeleteActivity').attr('action', '/admin/activity/' + slug);
-}
-
-
-//funciones para desactivar y activar traslados
-function deactiveTransfer(slug) {
-  $("#deactiveTransfer").modal();
-  $('#formDeactiveTransfer').attr('action', '/admin/transfer/' + slug + '/desactivar');
-}
-
-function activeTransfer(slug) {
-  $("#activeTransfer").modal();
-  $('#formActiveTransfer').attr('action', '/admin/transfer/' + slug + '/activar');
-}
-
-//funciones para preguntar al eliminar
-function deleteTransfer(slug) {
-  $("#deleteTransfer").modal();
-  $('#formDeleteTransfer').attr('action', '/admin/transfer/' + slug);
-}
-
-
-//funciones para desactivar y activar oficinas
-function deactiveOffice(slug) {
-  $("#deactiveOffice").modal();
-  $('#formDeactiveOffice').attr('action', '/admin/office/' + slug + '/desactivar');
-}
-
-function activeOffice(slug) {
-  $("#activeOffice").modal();
-  $('#formActiveOffice').attr('action', '/admin/office/' + slug + '/activar');
-}
-
-//funciones para preguntar al eliminar
-function deleteOffice(slug) {
-  $("#deleteOffice").modal();
-  $('#formDeleteOffice').attr('action', '/admin/office/' + slug);
-}
-
-
-//funciones para desactivar y activar usuarios
-function deactiveAttention(slug) {
-  $("#deactiveAttention").modal();
-  $('#formDeactiveAttention').attr('action', '/admin/attention/' + slug + '/desactivar');
-}
-
-function activeAttention(slug) {
-  $("#activeAttention").modal();
-  $('#formActiveAttention').attr('action', '/admin/attention/' + slug + '/activar');
-}
-
-//funciones para preguntar al eliminar
-function deleteAttention(slug) {
-  $("#deleteAttention").modal();
-  $('#formDeleteAttention').attr('action', '/admin/attention/' + slug);
-}
-
-
-//funciones para desactivar y activar usuarios
-function deactiveReservation(slug) {
-  $("#deactiveReservation").modal();
-  $('#formDeactiveReservation').attr('action', '/admin/reservation/' + slug + '/desactivar');
-}
-
-function activeReservation(slug) {
-  $("#activeReservation").modal();
-  $('#formActiveReservation').attr('action', '/admin/reservation/' + slug + '/activar');
-}
-
-//funciones para preguntar al eliminar
-function deleteReservation(slug) {
-  $("#deleteReservation").modal();
-  $('#formDeleteReservation').attr('action', '/admin/reservation/' + slug);
-}
-
-
-
-// funcion para cambiar el input hidden al cambiar el switch de estado
-$('#stateCheckbox').change(function(event) {
-  if ($(this).is(':checked')) {
-    $('#stateHidden').val(1);
-  } else {
-    $('#stateHidden').val(0);
-  }
-});
-
-// funcion para cambiar el input hidden al cambiar el switch de comentarios
-$('#commentCheckbox').change(function(event) {
-  if ($(this).is(':checked')) {
-    $('#commentHidden').val(1);
-  } else {
-    $('#commentHidden').val(0);
-  }
-});
-
-// funcion para cambiar el input hidden al cambiar el switch de destacado
-$('#featuredCheckbox').change(function(event) {
-  if ($(this).is(':checked')) {
-    $('#featuredHidden').val(1);
-  } else {
-    $('#featuredHidden').val(0);
-  }
-});
-
-//funciones para desactivar y activar usuarios
-function deactiveAdmin(slug) {
-  $("#deactiveAdmin").modal();
-  $('#formDeactiveAdmin').attr('action', '/admin/administradores/' + slug + '/desactivar');
-}
-
-function activeAdmin(slug) {
-  $("#activeAdmin").modal();
-  $('#formActiveAdmin').attr('action', '/admin/administradores/' + slug + '/activar');
-}
-
-function deactiveUser(slug) {
-  $("#deactiveUser").modal();
-  $('#formDeactiveUser').attr('action', '/admin/usuarios/' + slug + '/desactivar');
-}
-
-function activeUser(slug) {
-  $("#activeUser").modal();
-  $('#formActiveUser').attr('action', '/admin/usuarios/' + slug + '/activar');
-}
-
-function deactiveBanner(slug) {
-  $("#deactiveBanner").modal();
-  $('#formDeactiveBanner').attr('action', '/admin/banners/' + slug + '/desactivar');
-}
-
-function activeBannerNew(slug) {
-  $("#activeBannerNew").modal();
-  $('#formActiveBannerNew').attr('action', '/admin/banners/noticias/' + slug + '/activar');
-}
-
-function deactiveBannerNew(slug) {
-  $("#deactiveBannerNew").modal();
-  $('#formDeactiveBannerNew').attr('action', '/admin/banners/noticias/' + slug + '/desactivar');
-}
-
-function activeBanner(slug) {
-  $("#activeBanner").modal();
-  $('#formActiveBanner').attr('action', '/admin/banners/' + slug + '/activar');
-}
-
-function deactiveNew(slug) {
-  $("#deactiveNew").modal();
-  $('#formDeactiveNew').attr('action', '/admin/noticias/' + slug + '/desactivar');
-}
-
-function activeNew(slug) {
-  $("#activeNew").modal();
-  $('#formActiveNew').attr('action', '/admin/noticias/' + slug + '/activar');
-}
-
-function deactiveComment(slug) {
-  $("#deactiveComment").modal();
-  $('#formDeactiveComment').attr('action', '/admin/comentarios/' + slug + '/desactivar');
-}
-
-function activeComment(slug) {
-  $("#activeComment").modal();
-  $('#formActiveComment').attr('action', '/admin/comentarios/' + slug + '/activar');
-}
-
-function deactiveCommentUser(slug) {
-  $("#deactiveCommentUser").modal();
-  $('#formDeactiveCommentUser').attr('action', '/admin/comentarios/usuarios/' + slug + '/desactivar');
-}
-
-function activeCommentUser(slug) {
-  $("#activeCommentUser").modal();
-  $('#formActiveCommentUser').attr('action', '/admin/comentarios/usuarios/' + slug + '/activar');
-}
-
-//funciones para preguntar al eliminar
-function deleteUser(slug) {
-  $("#deleteUser").modal();
-  $('#formDeleteUser').attr('action', '/admin/usuarios/' + slug);
-}
-
 function deleteBanner(slug) {
   $("#deleteBanner").modal();
   $('#formDeleteBanner').attr('action', '/admin/banners/' + slug);
 }
 
-function deleteNew(slug) {
-  $("#deleteNew").modal();
-  $('#formDeleteNew').attr('action', '/admin/noticias/' + slug);
+function deleteCategory(slug) {
+  $("#deleteCategory").modal();
+  $('#formDeleteCategory').attr('action', '/admin/categorias/' + slug);
+}
+
+function deleteGallery(slug) {
+  $("#deleteGallery").modal();
+  $('#formDeleteGallery').attr('action', '/admin/galeria/' + slug);
+}
+
+function deleteExcursion(slug) {
+  $("#deleteExcursion").modal();
+  $('#formDeleteExcursion').attr('action', '/admin/excursiones/' + slug);
+}
+
+function deleteActivity(slug) {
+  $("#deleteActivity").modal();
+  $('#formDeleteActivity').attr('action', '/admin/actividades/' + slug);
+}
+
+function deleteTransfer(slug) {
+  $("#deleteTransfer").modal();
+  $('#formDeleteTransfer').attr('action', '/admin/traslados/' + slug);
 }
